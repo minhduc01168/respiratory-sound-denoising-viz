@@ -58,7 +58,7 @@ development_status:
   2-1-fastapi-initialization-storage: done
   2-2-sqlite-database-schema: done
   2-3-audio-upload-validation-api: done
-  2-4-denoising-process-api: ready-for-dev
+  2-4-denoising-process-api: done
   2-5-spectrogram-audio-streaming-api: ready-for-dev
   2-6-medical-annotations-crud-api: ready-for-dev
   2-7-preset-clinical-audio-loader: ready-for-dev
@@ -279,7 +279,7 @@ sprint_summary:
   total_story_points: 58
   epics_in_progress: 1
   epics_done: 1
-  stories_ready_for_dev: 4
+  stories_ready_for_dev: 3
   stories_in_progress: 0
-  stories_done: 9
-  completion_percentage: 38
+  stories_done: 10
+  completion_percentage: 42
