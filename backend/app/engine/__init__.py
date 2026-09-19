@@ -10,6 +10,12 @@ from .spectrogram import (
     create_mel_filterbank,
     get_spectrogram_payload,
 )
+from .metrics import (
+    calculate_snr,
+    calculate_snr_improvement,
+    calculate_log_spectral_distance,
+)
+from .pipeline import process_respiratory_audio
 
 __all__ = [
     "load_and_resample_audio",
@@ -25,4 +31,8 @@ __all__ = [
     "compute_mel_spectrogram",
     "create_mel_filterbank",
     "get_spectrogram_payload",
+    "calculate_snr",
+    "calculate_snr_improvement",
+    "calculate_log_spectral_distance",
+    "process_respiratory_audio",
 ]

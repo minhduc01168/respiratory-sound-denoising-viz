@@ -31,10 +31,10 @@ tracking_system: file-system
 story_location: docs/stories
 
 sprint_info:
-  current_sprint: 1
-  sprint_goal: "Hiện thực hóa Lõi DSP Engine & Benchmark Khử Nhiễu Âm Thanh Hô Hấp"
-  start_date: "2026-09-20"
-  end_date: "2026-10-04"
+  current_sprint: 2
+  sprint_goal: "Dịch Vụ Backend FastAPI & Tầng Dữ Liệu Y Tế (REST API & SQLite)"
+  start_date: "2026-10-05"
+  end_date: "2026-10-18"
   total_sprints: 4
   sprint_cadence: "1-2 weeks per sprint"
 
@@ -42,26 +42,26 @@ development_status:
   # ==============================================================================
   # EPIC 1: Lõi Xử Lý Tín Hiệu DSP & Thuật Toán Khử Nhiễu (18 Points) - SPRINT 1
   # ==============================================================================
-  epic-1: in-progress
+  epic-1: done
   1-1-audio-ingestion-resampling: done
   1-2-zero-phase-bandpass-filter: done
   1-3-acoustic-vad-engine: done
   1-4-adaptive-spectral-gating: done
   1-5-decibel-mel-spectrogram: done
-  1-6-dsp-quality-benchmark: ready-for-dev
-  epic-1-retrospective: optional
+  1-6-dsp-quality-benchmark: done
+  epic-1-retrospective: done
 
   # ==============================================================================
   # EPIC 2: Dịch Vụ Backend FastAPI & Tầng Dữ Liệu Y Tế (13 Points) - SPRINT 2
   # ==============================================================================
-  epic-2: backlog
-  2-1-fastapi-initialization-storage: backlog
-  2-2-sqlite-database-schema: backlog
-  2-3-audio-upload-validation-api: backlog
-  2-4-denoising-process-api: backlog
-  2-5-spectrogram-audio-streaming-api: backlog
-  2-6-medical-annotations-crud-api: backlog
-  2-7-preset-clinical-audio-loader: backlog
+  epic-2: in-progress
+  2-1-fastapi-initialization-storage: ready-for-dev
+  2-2-sqlite-database-schema: ready-for-dev
+  2-3-audio-upload-validation-api: ready-for-dev
+  2-4-denoising-process-api: ready-for-dev
+  2-5-spectrogram-audio-streaming-api: ready-for-dev
+  2-6-medical-annotations-crud-api: ready-for-dev
+  2-7-preset-clinical-audio-loader: ready-for-dev
   epic-2-retrospective: optional
 
   # ==============================================================================
@@ -278,8 +278,8 @@ sprint_summary:
   total_stories: 24
   total_story_points: 58
   epics_in_progress: 1
-  epics_done: 0
-  stories_ready_for_dev: 1
+  epics_done: 1
+  stories_ready_for_dev: 7
   stories_in_progress: 0
-  stories_done: 5
-  completion_percentage: 21
+  stories_done: 6
+  completion_percentage: 25
