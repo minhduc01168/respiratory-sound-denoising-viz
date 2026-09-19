@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.app.core.config import settings
 from backend.app.core.database import init_db
 from backend.app.api.routes_audio import router as audio_router
+from backend.app.api.routes_annotation import router as annotation_router
 
 # Initialize database tables on startup
 init_db()
@@ -24,6 +25,7 @@ app.add_middleware(
 )
 
 app.include_router(audio_router)
+app.include_router(annotation_router)
 
 
 @app.get("/")

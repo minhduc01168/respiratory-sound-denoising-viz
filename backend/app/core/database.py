@@ -81,20 +81,27 @@ def create_audio_record(data: Dict[str, Any], db_path: Optional[Path] = None) ->
                 id, filename, duration_original, duration_processed,
                 sample_rate, snr_original, snr_processed, snr_delta,
                 silence_trimmed_sec, raw_path, cleaned_path
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(id) DO UPDATE SET
+                duration_processed = excluded.duration_processed,
+                snr_original = excluded.snr_original,
+                snr_processed = excluded.snr_processed,
+                snr_delta = excluded.snr_delta,
+                silence_trimmed_sec = excluded.silence_trimmed_sec,
+                cleaned_path = excluded.cleaned_path;
             """,
             (
                 data["id"],
                 data["filename"],
                 data["duration_original"],
-                data["duration_processed"],
+                data.get("duration_processed", 0.0),
                 data.get("sample_rate", 16000),
                 data.get("snr_original", 0.0),
                 data.get("snr_processed", 0.0),
                 data.get("snr_delta", 0.0),
                 data.get("silence_trimmed_sec", 0.0),
                 data["raw_path"],
-                data["cleaned_path"],
+                data.get("cleaned_path", ""),
             ),
         )
     return get_audio_record(data["id"], db_path)

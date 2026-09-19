@@ -60,7 +60,7 @@ development_status:
   2-3-audio-upload-validation-api: done
   2-4-denoising-process-api: done
   2-5-spectrogram-audio-streaming-api: done
-  2-6-medical-annotations-crud-api: ready-for-dev
+  2-6-medical-annotations-crud-api: done
   2-7-preset-clinical-audio-loader: ready-for-dev
   epic-2-retrospective: optional
 
@@ -279,7 +279,7 @@ sprint_summary:
   total_story_points: 58
   epics_in_progress: 1
   epics_done: 1
-  stories_ready_for_dev: 2
+  stories_ready_for_dev: 1
   stories_in_progress: 0
-  stories_done: 11
-  completion_percentage: 46
+  stories_done: 12
+  completion_percentage: 50

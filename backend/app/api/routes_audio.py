@@ -69,6 +69,21 @@ async def upload_audio(file: UploadFile = File(...)):
     raw_path = settings.RAW_DIR / f"{audio_id}.wav"
     save_wav(str(raw_path), audio_data, sr=sr)
 
+    # Khởi tạo bản ghi âm thanh trong database
+    create_audio_record({
+        "id": audio_id,
+        "filename": filename,
+        "duration_original": round(duration_sec, 3),
+        "duration_processed": 0.0,
+        "sample_rate": sr,
+        "snr_original": 0.0,
+        "snr_processed": 0.0,
+        "snr_delta": 0.0,
+        "silence_trimmed_sec": 0.0,
+        "raw_path": str(raw_path),
+        "cleaned_path": "",
+    })
+
     return {
         "audio_id": audio_id,
         "filename": filename,
