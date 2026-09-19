@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import MetricsCard from './components/MetricsCard';
+import AudioRecordModal from './components/AudioRecordModal';
+import AudioUploadModal from './components/AudioUploadModal';
 import { Volume2, Sliders, Waves, Layers, Edit3, Sparkles } from 'lucide-react';
 
 export default function App() {
@@ -9,6 +11,8 @@ export default function App() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeAudioType, setActiveAudioType] = useState('cleaned'); // 'cleaned' | 'raw'
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isRecordModalOpen, setIsRecordModalOpen] = useState(false);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   // Load default preset on startup
   useEffect(() => {
@@ -25,7 +29,6 @@ export default function App() {
   const handleSelectPreset = (preset) => {
     setActiveCase(preset);
     setIsProcessing(true);
-    // Trigger process to get exact real-time metrics
     fetch(`/api/audio/process/${preset.id}`, { method: 'POST' })
       .then(res => res.json())
       .then(result => {
@@ -37,14 +40,19 @@ export default function App() {
       });
   };
 
+  const handleAudioProcessed = (result, newCase) => {
+    setActiveCase(newCase);
+    setMetrics(result.metrics);
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       {/* 1. Header with Brand, Presets, and System Status */}
       <Header 
         activeCase={activeCase}
         onSelectPreset={handleSelectPreset}
-        onOpenUploadModal={() => alert('Chức năng tải file (.wav, .mp3) - Story 3.2')}
-        onOpenRecordModal={() => alert('Chức năng thu âm trực tiếp qua mic/ống nghe y tế - Story 3.2')}
+        onOpenUploadModal={() => setIsUploadModalOpen(true)}
+        onOpenRecordModal={() => setIsRecordModalOpen(true)}
         onExportReport={() => window.print()}
       />
 
@@ -178,6 +186,19 @@ export default function App() {
           </div>
         </aside>
       </main>
+
+      {/* Modals */}
+      <AudioRecordModal 
+        isOpen={isRecordModalOpen}
+        onClose={() => setIsRecordModalOpen(false)}
+        onProcessed={handleAudioProcessed}
+      />
+
+      <AudioUploadModal 
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        onProcessed={handleAudioProcessed}
+      />
     </div>
   );
 }
