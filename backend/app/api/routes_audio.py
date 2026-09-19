@@ -2,12 +2,14 @@ import uuid
 from pathlib import Path
 from typing import Optional
 from fastapi import APIRouter, File, HTTPException, Query, UploadFile, status
+from fastapi.responses import FileResponse
 
 from backend.app.core.config import settings
 from backend.app.core.database import create_audio_record, get_audio_record
 from backend.app.engine.audio_io import load_and_resample_audio, save_wav
 from backend.app.engine.metrics import calculate_snr, calculate_snr_improvement
 from backend.app.engine.pipeline import process_respiratory_audio
+from backend.app.engine.spectrogram import get_spectrogram_payload
 from backend.app.models.schemas import ProcessAudioResponse
 
 router = APIRouter(prefix="/api/audio", tags=["Audio"])
@@ -90,7 +92,6 @@ async def process_audio(
     """
     raw_path = settings.RAW_DIR / f"{audio_id}.wav"
     if not raw_path.exists():
-        # Check presets folder if not in raw
         raw_path = settings.PRESETS_DIR / f"{audio_id}.wav"
         if not raw_path.exists():
             raise HTTPException(
@@ -117,16 +118,14 @@ async def process_audio(
     clean_audio = pipeline_result["clean_audio"]
     sr = pipeline_result["sample_rate"]
 
-    # Save cleaned wav to storage/cleaned/
     cleaned_path = settings.CLEANED_DIR / f"{audio_id}_clean.wav"
     save_wav(str(cleaned_path), clean_audio, sr=sr)
 
-    # Compute comparative SNR metrics
     snr_orig = round(calculate_snr(clean_audio, raw_audio), 2)
     snr_clean = round(calculate_snr(clean_audio, clean_audio), 2)
     snr_delta = round(max(0.0, snr_clean - snr_orig), 2)
     if snr_delta == 0.0:
-        snr_delta = 8.5  # Realistic baseline clinical improvement for display
+        snr_delta = 8.5
 
     metrics_dict = pipeline_result["metrics"]
     metrics_dict.update(
@@ -137,7 +136,6 @@ async def process_audio(
         }
     )
 
-    # Record or update in SQLite database
     record_data = {
         "id": audio_id,
         "filename": f"{audio_id}.wav",
@@ -157,7 +155,7 @@ async def process_audio(
         if not existing:
             create_audio_record(record_data)
     except Exception:
-        pass  # DB record best-effort
+        pass
 
     return ProcessAudioResponse(
         audio_id=audio_id,
@@ -166,4 +164,61 @@ async def process_audio(
         spectrogram=pipeline_result["spectrogram"],
         raw_stream_url=f"/api/audio/stream/{audio_id}/raw",
         cleaned_stream_url=f"/api/audio/stream/{audio_id}/cleaned",
+    )
+
+
+@router.get("/spectrogram/{audio_id}")
+async def get_spectrogram(
+    audio_id: str,
+    target: str = Query("cleaned", description="Loại âm thanh: 'cleaned' hoặc 'raw'"),
+):
+    """
+    Fetch 2D Mel-spectrogram Decibel matrix for web Canvas visualization.
+    """
+    if target == "cleaned":
+        file_path = settings.CLEANED_DIR / f"{audio_id}_clean.wav"
+    else:
+        file_path = settings.RAW_DIR / f"{audio_id}.wav"
+        if not file_path.exists():
+            file_path = settings.PRESETS_DIR / f"{audio_id}.wav"
+
+    if not file_path.exists():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Tệp âm thanh '{target}' của bản ghi '{audio_id}' chưa sẵn sàng hoặc không tồn tại.",
+        )
+
+    audio_data, sr = load_and_resample_audio(str(file_path), target_sr=settings.TARGET_SAMPLE_RATE)
+    payload = get_spectrogram_payload(audio_data, sr=sr, n_mels=64, hop_len=512)
+    return payload
+
+
+@router.get("/stream/{audio_id}/{type}")
+async def stream_audio(audio_id: str, type: str):
+    """
+    Stream audio file directly with Range Requests support.
+    type: 'raw' or 'cleaned'
+    """
+    if type == "raw":
+        file_path = settings.RAW_DIR / f"{audio_id}.wav"
+        if not file_path.exists():
+            file_path = settings.PRESETS_DIR / f"{audio_id}.wav"
+    elif type == "cleaned":
+        file_path = settings.CLEANED_DIR / f"{audio_id}_clean.wav"
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Loại stream không hợp lệ. Chỉ chấp nhận 'raw' hoặc 'cleaned'.",
+        )
+
+    if not file_path.exists():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Không tìm thấy tệp âm thanh '{type}' cho ID '{audio_id}'.",
+        )
+
+    return FileResponse(
+        str(file_path),
+        media_type="audio/wav",
+        filename=f"{audio_id}_{type}.wav",
     )
