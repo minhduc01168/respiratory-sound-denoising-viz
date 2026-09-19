@@ -43,7 +43,7 @@ development_status:
   # EPIC 1: Lõi Xử Lý Tín Hiệu DSP & Thuật Toán Khử Nhiễu (18 Points) - SPRINT 1
   # ==============================================================================
   epic-1: in-progress
-  1-1-audio-ingestion-resampling: ready-for-dev
+  1-1-audio-ingestion-resampling: done
   1-2-zero-phase-bandpass-filter: ready-for-dev
   1-3-acoustic-vad-engine: ready-for-dev
   1-4-adaptive-spectral-gating: ready-for-dev
@@ -279,7 +279,7 @@ sprint_summary:
   total_story_points: 58
   epics_in_progress: 1
   epics_done: 0
-  stories_ready_for_dev: 6
+  stories_ready_for_dev: 5
   stories_in_progress: 0
-  stories_done: 0
-  completion_percentage: 0
+  stories_done: 1
+  completion_percentage: 4
