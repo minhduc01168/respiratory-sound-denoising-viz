@@ -20,6 +20,8 @@ backend/storage/raw/*
 !backend/storage/raw/.gitkeep
 backend/storage/cleaned/*
 !backend/storage/cleaned/.gitkeep
+backend/storage/presets/*.wav
+!backend/storage/presets/.gitkeep
 backend/storage/*.db
 backend/storage/*.sqlite3
 

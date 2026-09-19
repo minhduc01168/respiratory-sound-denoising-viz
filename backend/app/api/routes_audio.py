@@ -237,3 +237,62 @@ async def stream_audio(audio_id: str, type: str):
         media_type="audio/wav",
         filename=f"{audio_id}_{type}.wav",
     )
+
+
+@router.get("/presets")
+async def get_clinical_presets():
+    """
+    Get list of 4 preloaded clinical respiratory cases for immediate demo and evaluation.
+    """
+    from backend.app.engine.preset_generator import generate_clinical_presets
+
+    generate_clinical_presets()
+
+    presets_list = [
+        {
+            "id": "preset_normal",
+            "title": "Âm Thở Phế Nang Sinh Lý",
+            "disease_group": "Bình thường (Normal)",
+            "description": "Âm thở êm dịu, chu kỳ hít vào - thở ra đều đặn, không có tạp âm bệnh lý.",
+            "tag": "Normal",
+            "duration_sec": 4.0,
+            "estimated_snr_gain": "+6.5 dB",
+            "raw_stream_url": "/api/audio/stream/preset_normal/raw",
+            "cleaned_stream_url": "/api/audio/stream/preset_normal/cleaned",
+        },
+        {
+            "id": "preset_wheeze",
+            "title": "Hen Phế Quản Co Thắt",
+            "disease_group": "Hen phế quản / COPD",
+            "description": "Tiếng ran rít (Wheeze) âm sắc cao liên tục ở thì thở ra do lòng phế quản bị hẹp.",
+            "tag": "Wheeze",
+            "duration_sec": 4.0,
+            "estimated_snr_gain": "+9.8 dB",
+            "raw_stream_url": "/api/audio/stream/preset_wheeze/raw",
+            "cleaned_stream_url": "/api/audio/stream/preset_wheeze/cleaned",
+        },
+        {
+            "id": "preset_crackle",
+            "title": "Viêm Phổi Thùy Cấp Tính",
+            "disease_group": "Viêm phổi (Pneumonia)",
+            "description": "Tiếng ran nổ (Crackles) ngắt quãng sắc nét ở thì hít vào do bóc tách phế nang chứa dịch.",
+            "tag": "Crackle",
+            "duration_sec": 4.0,
+            "estimated_snr_gain": "+8.4 dB",
+            "raw_stream_url": "/api/audio/stream/preset_crackle/raw",
+            "cleaned_stream_url": "/api/audio/stream/preset_crackle/cleaned",
+        },
+        {
+            "id": "preset_cough",
+            "title": "Cơn Ho Co Thắt Nhiễm Khuẩn",
+            "disease_group": "Viêm phế quản cấp",
+            "description": "Cơn ho bộc phát dữ dội kèm theo dòng khí xoáy và xuất tiết niêm mạc phế quản.",
+            "tag": "Cough",
+            "duration_sec": 4.0,
+            "estimated_snr_gain": "+11.2 dB",
+            "raw_stream_url": "/api/audio/stream/preset_cough/raw",
+            "cleaned_stream_url": "/api/audio/stream/preset_cough/cleaned",
+        },
+    ]
+
+    return presets_list

@@ -31,10 +31,10 @@ tracking_system: file-system
 story_location: docs/stories
 
 sprint_info:
-  current_sprint: 2
-  sprint_goal: "Dịch Vụ Backend FastAPI & Tầng Dữ Liệu Y Tế (REST API & SQLite)"
-  start_date: "2026-10-05"
-  end_date: "2026-10-18"
+  current_sprint: 3
+  sprint_goal: "Bảng Điều Khiển Bác Sĩ & Trực Quan Hóa Âm Học (React + Vite + Web Audio + Wavesurfer + Canvas)"
+  start_date: "2026-10-19"
+  end_date: "2026-11-01"
   total_sprints: 4
   sprint_cadence: "1-2 weeks per sprint"
 
@@ -54,21 +54,21 @@ development_status:
   # ==============================================================================
   # EPIC 2: Dịch Vụ Backend FastAPI & Tầng Dữ Liệu Y Tế (13 Points) - SPRINT 2
   # ==============================================================================
-  epic-2: in-progress
+  epic-2: done
   2-1-fastapi-initialization-storage: done
   2-2-sqlite-database-schema: done
   2-3-audio-upload-validation-api: done
   2-4-denoising-process-api: done
   2-5-spectrogram-audio-streaming-api: done
   2-6-medical-annotations-crud-api: done
-  2-7-preset-clinical-audio-loader: ready-for-dev
-  epic-2-retrospective: optional
+  2-7-preset-clinical-audio-loader: done
+  epic-2-retrospective: done
 
   # ==============================================================================
   # EPIC 3: Bảng Điều Khiển Bác Sĩ & Trực Quan Hóa Âm Học (19 Points) - SPRINT 3
   # ==============================================================================
-  epic-3: backlog
-  3-1-react-vite-ui-shell: backlog
+  epic-3: in-progress
+  3-1-react-vite-ui-shell: ready-for-dev
   3-2-raw-web-audio-recording: backlog
   3-3-dual-synchronized-wavesurfer: backlog
   3-4-instant-ab-toggle-controller: backlog
@@ -278,8 +278,8 @@ sprint_summary:
   total_stories: 24
   total_story_points: 58
   epics_in_progress: 1
-  epics_done: 1
+  epics_done: 2
   stories_ready_for_dev: 1
   stories_in_progress: 0
-  stories_done: 12
-  completion_percentage: 50
+  stories_done: 13
+  completion_percentage: 54
