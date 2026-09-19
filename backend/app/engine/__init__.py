@@ -4,6 +4,7 @@
 from .audio_io import load_and_resample_audio, normalize_audio, save_wav
 from .filters import apply_bandpass_filter, butter_bandpass_sos
 from .vad import compute_frame_energy, detect_breath_activity, trim_silence
+from .spectral_gating import reduce_noise_spectral_gating, estimate_noise_profile
 
 __all__ = [
     "load_and_resample_audio",
@@ -14,4 +15,6 @@ __all__ = [
     "compute_frame_energy",
     "detect_breath_activity",
     "trim_silence",
+    "reduce_noise_spectral_gating",
+    "estimate_noise_profile",
 ]
