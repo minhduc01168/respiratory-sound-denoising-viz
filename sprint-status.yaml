@@ -55,7 +55,7 @@ development_status:
   # EPIC 2: Dịch Vụ Backend FastAPI & Tầng Dữ Liệu Y Tế (13 Points) - SPRINT 2
   # ==============================================================================
   epic-2: in-progress
-  2-1-fastapi-initialization-storage: ready-for-dev
+  2-1-fastapi-initialization-storage: done
   2-2-sqlite-database-schema: ready-for-dev
   2-3-audio-upload-validation-api: ready-for-dev
   2-4-denoising-process-api: ready-for-dev
@@ -279,7 +279,7 @@ sprint_summary:
   total_story_points: 58
   epics_in_progress: 1
   epics_done: 1
-  stories_ready_for_dev: 7
+  stories_ready_for_dev: 6
   stories_in_progress: 0
-  stories_done: 6
-  completion_percentage: 25
+  stories_done: 7
+  completion_percentage: 29
