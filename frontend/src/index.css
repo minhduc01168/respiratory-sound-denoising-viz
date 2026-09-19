@@ -222,3 +222,41 @@ code, pre, .font-mono {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
 }
+
+/* Medical Report Print Media Styles */
+@media print {
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    font-size: 12pt;
+  }
+
+  header, main, .no-print, .modal-backdrop {
+    background: transparent !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .printable-report {
+    position: static !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: none !important;
+    background: #FFFFFF !important;
+    color: #1E293B !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .printable-report table {
+    color: #1E293B !important;
+  }
+
+  .badge {
+    border: 1px solid #94A3B8 !important;
+    color: #0F172A !important;
+  }
+}

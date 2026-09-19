@@ -31,10 +31,10 @@ tracking_system: file-system
 story_location: docs/stories
 
 sprint_info:
-  current_sprint: 3
-  sprint_goal: "Bảng Điều Khiển Bác Sĩ & Trực Quan Hóa Âm Học (React + Vite + Web Audio + Wavesurfer + Canvas)"
-  start_date: "2026-10-19"
-  end_date: "2026-11-01"
+  current_sprint: 4
+  sprint_goal: "Tích Hợp E2E, Thẩm Định Y Tế & Đóng Gói Một Chạm (Packaging & Validation)"
+  start_date: "2026-11-02"
+  end_date: "2026-11-15"
   total_sprints: 4
   sprint_cadence: "1-2 weeks per sprint"
 
@@ -67,21 +67,21 @@ development_status:
   # ==============================================================================
   # EPIC 3: Bảng Điều Khiển Bác Sĩ & Trực Quan Hóa Âm Học (19 Points) - SPRINT 3
   # ==============================================================================
-  epic-3: in-progress
+  epic-3: done
   3-1-react-vite-ui-shell: done
   3-2-raw-web-audio-recording: done
   3-3-dual-synchronized-wavesurfer: done
   3-4-instant-ab-toggle-controller: done
   3-5-canvas-interactive-mel-spectrogram: done
   3-6-medical-region-take-note: done
-  3-7-preset-selector-export-summary: ready-for-dev
-  epic-3-retrospective: optional
+  3-7-preset-selector-export-summary: done
+  epic-3-retrospective: done
 
   # ==============================================================================
   # EPIC 4: Tích Hợp E2E, Thẩm Định Y Tế & Đóng Gói (8 Points) - SPRINT 4
   # ==============================================================================
-  epic-4: backlog
-  4-1-e2e-user-flow-testing: backlog
+  epic-4: in-progress
+  4-1-e2e-user-flow-testing: ready-for-dev
   4-2-latency-performance-profiling: backlog
   4-3-clinical-metric-report: backlog
   4-4-one-click-startup-packaging: backlog
@@ -278,8 +278,8 @@ sprint_summary:
   total_stories: 24
   total_story_points: 58
   epics_in_progress: 1
-  epics_done: 2
+  epics_done: 3
   stories_ready_for_dev: 1
   stories_in_progress: 0
-  stories_done: 19
-  completion_percentage: 79
+  stories_done: 20
+  completion_percentage: 83
