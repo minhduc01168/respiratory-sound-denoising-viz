@@ -1,0 +1,285 @@
+# generated: 2026-09-19
+# last_updated: 2026-09-19
+# project: respiratory-sound-denoising-viz
+# project_key: RSDV
+# tracking_system: file-system
+# story_location: docs/stories
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story ready for coding
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review
+#   - done: Story completed and verified
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+
+generated: 2026-09-19
+last_updated: 2026-09-19
+project: respiratory-sound-denoising-viz
+project_key: RSDV
+tracking_system: file-system
+story_location: docs/stories
+
+sprint_info:
+  current_sprint: 1
+  sprint_goal: "Hiện thực hóa Lõi DSP Engine & Benchmark Khử Nhiễu Âm Thanh Hô Hấp"
+  start_date: "2026-09-20"
+  end_date: "2026-10-04"
+  total_sprints: 4
+  sprint_cadence: "1-2 weeks per sprint"
+
+development_status:
+  # ==============================================================================
+  # EPIC 1: Lõi Xử Lý Tín Hiệu DSP & Thuật Toán Khử Nhiễu (18 Points) - SPRINT 1
+  # ==============================================================================
+  epic-1: in-progress
+  1-1-audio-ingestion-resampling: ready-for-dev
+  1-2-zero-phase-bandpass-filter: ready-for-dev
+  1-3-acoustic-vad-engine: ready-for-dev
+  1-4-adaptive-spectral-gating: ready-for-dev
+  1-5-decibel-mel-spectrogram: ready-for-dev
+  1-6-dsp-quality-benchmark: ready-for-dev
+  epic-1-retrospective: optional
+
+  # ==============================================================================
+  # EPIC 2: Dịch Vụ Backend FastAPI & Tầng Dữ Liệu Y Tế (13 Points) - SPRINT 2
+  # ==============================================================================
+  epic-2: backlog
+  2-1-fastapi-initialization-storage: backlog
+  2-2-sqlite-database-schema: backlog
+  2-3-audio-upload-validation-api: backlog
+  2-4-denoising-process-api: backlog
+  2-5-spectrogram-audio-streaming-api: backlog
+  2-6-medical-annotations-crud-api: backlog
+  2-7-preset-clinical-audio-loader: backlog
+  epic-2-retrospective: optional
+
+  # ==============================================================================
+  # EPIC 3: Bảng Điều Khiển Bác Sĩ & Trực Quan Hóa Âm Học (19 Points) - SPRINT 3
+  # ==============================================================================
+  epic-3: backlog
+  3-1-react-vite-ui-shell: backlog
+  3-2-raw-web-audio-recording: backlog
+  3-3-dual-synchronized-wavesurfer: backlog
+  3-4-instant-ab-toggle-controller: backlog
+  3-5-canvas-interactive-mel-spectrogram: backlog
+  3-6-medical-region-take-note: backlog
+  3-7-preset-selector-export-summary: backlog
+  epic-3-retrospective: optional
+
+  # ==============================================================================
+  # EPIC 4: Tích Hợp E2E, Thẩm Định Y Tế & Đóng Gói (8 Points) - SPRINT 4
+  # ==============================================================================
+  epic-4: backlog
+  4-1-e2e-user-flow-testing: backlog
+  4-2-latency-performance-profiling: backlog
+  4-3-clinical-metric-report: backlog
+  4-4-one-click-startup-packaging: backlog
+  epic-4-retrospective: optional
+
+# Chi tiết Stories Metadata phục vụ truy vấn & CI/CD
+stories_detail:
+  1-1-audio-ingestion-resampling:
+    title: "Audio Ingestion, Mono Conversion & 16kHz Resampling"
+    epic: 1
+    story_points: 2
+    priority: "P0"
+    target_files:
+      - backend/app/engine/audio_io.py
+      - backend/tests/test_audio_io.py
+  1-2-zero-phase-bandpass-filter:
+    title: "Zero-Phase Butterworth Bandpass Filter (50Hz - 4000Hz)"
+    epic: 1
+    story_points: 3
+    priority: "P0"
+    target_files:
+      - backend/app/engine/filters.py
+      - backend/tests/test_filters.py
+  1-3-acoustic-vad-engine:
+    title: "Acoustic Energy & Entropy VAD Engine"
+    epic: 1
+    story_points: 4
+    priority: "P0"
+    target_files:
+      - backend/app/engine/vad.py
+      - backend/tests/test_vad.py
+  1-4-adaptive-spectral-gating:
+    title: "Adaptive Spectral Gating Denoising"
+    epic: 1
+    story_points: 4
+    priority: "P0"
+    target_files:
+      - backend/app/engine/spectral_gating.py
+      - backend/tests/test_spectral.py
+  1-5-decibel-mel-spectrogram:
+    title: "Decibel Mel-Spectrogram Matrix Generator"
+    epic: 1
+    story_points: 2
+    priority: "P0"
+    target_files:
+      - backend/app/engine/spectrogram.py
+      - backend/tests/test_spectrogram.py
+  1-6-dsp-quality-benchmark:
+    title: "DSP Quality Benchmark Harness (SNR & Distortion)"
+    epic: 1
+    story_points: 3
+    priority: "P1"
+    target_files:
+      - backend/app/engine/metrics.py
+      - backend/tests/test_benchmark.py
+
+  2-1-fastapi-initialization-storage:
+    title: "FastAPI App Initialization & Storage Architecture"
+    epic: 2
+    story_points: 1
+    priority: "P0"
+    target_files:
+      - backend/app/main.py
+      - backend/app/core/config.py
+  2-2-sqlite-database-schema:
+    title: "SQLite Database & Schema Definition"
+    epic: 2
+    story_points: 2
+    priority: "P0"
+    target_files:
+      - backend/app/core/database.py
+      - backend/app/models/db_models.py
+  2-3-audio-upload-validation-api:
+    title: "Audio Ingestion & Validation API (POST /api/audio/upload)"
+    epic: 2
+    story_points: 2
+    priority: "P0"
+    target_files:
+      - backend/app/api/routes_audio.py
+  2-4-denoising-process-api:
+    title: "Denoising Pipeline Orchestration API (POST /api/audio/process/{id})"
+    epic: 2
+    story_points: 3
+    priority: "P0"
+    target_files:
+      - backend/app/api/routes_audio.py
+  2-5-spectrogram-audio-streaming-api:
+    title: "Spectrogram Data & Audio Streaming Endpoints"
+    epic: 2
+    story_points: 2
+    priority: "P0"
+    target_files:
+      - backend/app/api/routes_audio.py
+  2-6-medical-annotations-crud-api:
+    title: "Medical Annotations CRUD API (/api/annotations)"
+    epic: 2
+    story_points: 2
+    priority: "P0"
+    target_files:
+      - backend/app/api/routes_annotation.py
+  2-7-preset-clinical-audio-loader:
+    title: "Preset Clinical Audio Loader API (GET /api/presets)"
+    epic: 2
+    story_points: 1
+    priority: "P1"
+    target_files:
+      - backend/app/api/routes_audio.py
+
+  3-1-react-vite-ui-shell:
+    title: "React + Vite Workspace & Medical Dark UI Shell"
+    epic: 3
+    story_points: 2
+    priority: "P0"
+    target_files:
+      - frontend/src/App.jsx
+      - frontend/src/index.css
+  3-2-raw-web-audio-recording:
+    title: "Raw Web Audio Recording Studio (No Hardware Filter)"
+    epic: 3
+    story_points: 3
+    priority: "P0"
+    target_files:
+      - frontend/src/components/AudioRecorder.jsx
+  3-3-dual-synchronized-wavesurfer:
+    title: "Dual-Synchronized Wavesurfer Audio Player"
+    epic: 3
+    story_points: 3
+    priority: "P0"
+    target_files:
+      - frontend/src/components/AudioPlayerAB.jsx
+  3-4-instant-ab-toggle-controller:
+    title: "Instant A/B Toggle Controller (0ms Delay)"
+    epic: 3
+    story_points: 2
+    priority: "P0"
+    target_files:
+      - frontend/src/components/AudioPlayerAB.jsx
+  3-5-canvas-interactive-mel-spectrogram:
+    title: "Canvas Interactive Mel-Spectrogram Viewer (Magma Colormap)"
+    epic: 3
+    story_points: 4
+    priority: "P0"
+    target_files:
+      - frontend/src/components/SpectrogramViewer.jsx
+      - frontend/src/utils/colormap.js
+  3-6-medical-region-take-note:
+    title: "Medical Region Selector & Quick-Tag Annotation Panel"
+    epic: 3
+    story_points: 3
+    priority: "P0"
+    target_files:
+      - frontend/src/components/AnnotationPanel.jsx
+  3-7-preset-selector-export-summary:
+    title: "Preset Patient Selector & Export Summary"
+    epic: 3
+    story_points: 2
+    priority: "P1"
+    target_files:
+      - frontend/src/components/PresetSelector.jsx
+
+  4-1-e2e-user-flow-testing:
+    title: "End-to-End User Flow Integration Testing"
+    epic: 4
+    story_points: 3
+    priority: "P0"
+    target_files:
+      - backend/tests/test_e2e_flow.py
+  4-2-latency-performance-profiling:
+    title: "Latency & Performance Optimization Profiling"
+    epic: 4
+    story_points: 2
+    priority: "P0"
+    target_files:
+      - docs/PERFORMANCE_REPORT.md
+  4-3-clinical-metric-report:
+    title: "Clinical Metric Report & Technical Documentation"
+    epic: 4
+    story_points: 2
+    priority: "P1"
+    target_files:
+      - docs/CLINICAL_BENCHMARK_REPORT.md
+  4-4-one-click-startup-packaging:
+    title: "One-Click Startup Script & Deployment Packaging"
+    epic: 4
+    story_points: 1
+    priority: "P1"
+    target_files:
+      - start.bat
+      - docker-compose.yml
+
+# Tổng hợp Tiến độ Sprints
+sprint_summary:
+  total_epics: 4
+  total_stories: 24
+  total_story_points: 58
+  epics_in_progress: 1
+  epics_done: 0
+  stories_ready_for_dev: 6
+  stories_in_progress: 0
+  stories_done: 0
+  completion_percentage: 0

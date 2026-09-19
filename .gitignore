@@ -1,0 +1,36 @@
+# Antigravity & BMAD folders (Strictly excluded as per project rules)
+_bmad/
+_bmad-output/
+.agents/
+.agent/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.env
+
+# Storage audio files & local SQLite database
+backend/storage/raw/*
+!backend/storage/raw/.gitkeep
+backend/storage/cleaned/*
+!backend/storage/cleaned/.gitkeep
+backend/storage/*.db
+backend/storage/*.sqlite3
+
+# Node / Frontend artifacts
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# IDE & OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
