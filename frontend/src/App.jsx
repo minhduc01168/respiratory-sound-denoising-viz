@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import MetricsCard from './components/MetricsCard';
+import DualWaveformPlayer from './components/DualWaveformPlayer';
 import AudioRecordModal from './components/AudioRecordModal';
 import AudioUploadModal from './components/AudioUploadModal';
 import { Volume2, Sliders, Waves, Layers, Edit3, Sparkles } from 'lucide-react';
@@ -10,6 +11,7 @@ export default function App() {
   const [metrics, setMetrics] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeAudioType, setActiveAudioType] = useState('cleaned'); // 'cleaned' | 'raw'
+  const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isRecordModalOpen, setIsRecordModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -71,54 +73,15 @@ export default function App() {
           <MetricsCard metrics={metrics} caseInfo={activeCase} />
 
           {/* Dual Waveform Audio Player Panel */}
-          <div className="glass-panel" style={{ padding: '1.25rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Waves size={18} color="#06B6D4" />
-                <h3 style={{ fontSize: '0.95rem', fontWeight: 600 }}>Dạng Sóng Âm Học Kép (Dual Waveform Player)</h3>
-              </div>
-
-              {/* Instant A/B Toggle Switch Button */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-darker)', padding: '0.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
-                <button 
-                  className={`btn ${activeAudioType === 'raw' ? 'btn-danger' : 'btn-secondary'}`}
-                  style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem' }}
-                  onClick={() => setActiveAudioType('raw')}
-                >
-                  Bản Gốc (Raw)
-                </button>
-                <button 
-                  className={`btn ${activeAudioType === 'cleaned' ? 'btn-success' : 'btn-secondary'}`}
-                  style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem' }}
-                  onClick={() => setActiveAudioType('cleaned')}
-                >
-                  <Sparkles size={12} />
-                  Đã Khử Nhiễu (Cleaned)
-                </button>
-              </div>
-            </div>
-
-            {/* Waveform Visualization Canvas Containers */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: 'var(--radius-md)', padding: '0.75rem', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '0.7rem', color: '#F43F5E', fontWeight: 600, marginBottom: '0.35rem' }}>
-                  KÊNH A: ÂM THANH GỐC (LẪN TẠP ÂM MÔI TRƯỜNG & 50Hz HUM)
-                </div>
-                <div id="waveform-raw" style={{ height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-                  {activeCase ? `Đang nạp file gốc: ${activeCase.id}.wav` : 'Chọn ca bệnh để xem dạng sóng'}
-                </div>
-              </div>
-
-              <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: 'var(--radius-md)', padding: '0.75rem', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
-                <div style={{ fontSize: '0.7rem', color: '#10B981', fontWeight: 600, marginBottom: '0.35rem' }}>
-                  KÊNH B: ÂM THANH ĐÃ LỌC (ZERO-PHASE BUTTERWORTH + WIENER GATING)
-                </div>
-                <div id="waveform-clean" style={{ height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-                  {activeCase ? `Đang nạp file sạch: ${activeCase.id}_clean.wav` : 'Chọn ca bệnh để xem dạng sóng'}
-                </div>
-              </div>
-            </div>
-          </div>
+          {activeCase && (
+            <DualWaveformPlayer
+              rawUrl={`/api/audio/stream/${activeCase.id}/raw`}
+              cleanedUrl={`/api/audio/stream/${activeCase.id}/cleaned`}
+              activeAudioType={activeAudioType}
+              setActiveAudioType={setActiveAudioType}
+              onTimeUpdate={(t, d) => setCurrentTime(t)}
+            />
+          )}
 
           {/* Interactive Mel-Spectrogram Panel */}
           <div className="glass-panel" style={{ padding: '1.25rem' }}>

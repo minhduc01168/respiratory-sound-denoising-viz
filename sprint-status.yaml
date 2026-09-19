@@ -70,9 +70,9 @@ development_status:
   epic-3: in-progress
   3-1-react-vite-ui-shell: done
   3-2-raw-web-audio-recording: done
-  3-3-dual-synchronized-wavesurfer: ready-for-dev
-  3-4-instant-ab-toggle-controller: backlog
-  3-5-canvas-interactive-mel-spectrogram: backlog
+  3-3-dual-synchronized-wavesurfer: done
+  3-4-instant-ab-toggle-controller: done
+  3-5-canvas-interactive-mel-spectrogram: ready-for-dev
   3-6-medical-region-take-note: backlog
   3-7-preset-selector-export-summary: backlog
   epic-3-retrospective: optional
@@ -281,5 +281,5 @@ sprint_summary:
   epics_done: 2
   stories_ready_for_dev: 1
   stories_in_progress: 0
-  stories_done: 15
-  completion_percentage: 63
+  stories_done: 17
+  completion_percentage: 71
