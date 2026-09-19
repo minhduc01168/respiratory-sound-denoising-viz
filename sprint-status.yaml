@@ -56,7 +56,7 @@ development_status:
   # ==============================================================================
   epic-2: in-progress
   2-1-fastapi-initialization-storage: done
-  2-2-sqlite-database-schema: ready-for-dev
+  2-2-sqlite-database-schema: done
   2-3-audio-upload-validation-api: ready-for-dev
   2-4-denoising-process-api: ready-for-dev
   2-5-spectrogram-audio-streaming-api: ready-for-dev
@@ -279,7 +279,7 @@ sprint_summary:
   total_story_points: 58
   epics_in_progress: 1
   epics_done: 1
-  stories_ready_for_dev: 6
+  stories_ready_for_dev: 5
   stories_in_progress: 0
-  stories_done: 7
-  completion_percentage: 29
+  stories_done: 8
+  completion_percentage: 33
