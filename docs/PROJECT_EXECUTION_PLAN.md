@@ -40,40 +40,113 @@ Xây dựng một nền tảng Web thông minh đóng vai trò **Trợ lý Tiề
 
 ```mermaid
 flowchart TB
-    subgraph Client_Tier ["🌐 TẦNG TRÌNH DUYỆT (FRONTEND - REACT + VITE)"]
-        A1[Microphone / Web Audio API<br/>*Disabled OS Noise Filters*] --> A3[Audio State Controller]
-        A2[File Upload .wav / .mp3] --> A3
-        A3 --> A4[Synchronized Wavesurfer v7]
-        A4 --> A5[A/B Seamless Toggle]
-        A4 --> A6[Mel-Spectrogram Canvas Layer]
-        A4 --> A7[Interactive Region Take-note & Quick Tags]
+    %% ==========================================
+    %% 1. FRONTEND TIER
+    %% ==========================================
+    subgraph Client_Tier ["🖥️ TẦNG TRÌNH DUYỆT (FRONTEND - REACT 18 + VITE)"]
+        direction TB
+        subgraph UI_INPUTS ["🎙️ Thu Nhận Âm Thanh & Presets"]
+            A1["🎤 Live Recording Studio<br/><i>(Bypass Hardware AGC/AEC/NS)</i>"]
+            A2["📁 Audio File Upload<br/><i>(.WAV / .MP3)</i>"]
+            A3["📋 4 Bệnh Án Mẫu Presets<br/><i>(Wheeze, Crackles, Rhonchi, Normal)</i>"]
+        end
+
+        subgraph UI_CONTROLS ["🎛️ Dual-Profile & Strategy Toolbar"]
+            A4["🫁 Profile Tiếng Phổi<br/><i>(50-2500Hz, CPR & WHF)</i>"]
+            A5["🎙️ Profile Tiếng Nói<br/><i>(80-7500Hz, PESQ & STOI)</i>"]
+            A6["⚙️ Algorithm Selector<br/><i>(Classical / Bio-Acoustic / DTLN AI)</i>"]
+        end
+
+        subgraph UI_VIZ ["📊 Không Gian Thẩm Định Trực Quan (Medical Studio)"]
+            A7["〰️ Dual WaveSurfer Player<br/><i>(Đồng bộ 60 FPS, Kênh Gốc vs Kênh Sạch)</i>"]
+            A8["⚡ Instant A/B Audio Switcher<br/><i>(Chuyển kênh tức thì 0ms qua Tab/Spacebar)</i>"]
+            A9["🌈 Interactive Mel-Spectrogram<br/><i>(256-color Magma LUT, Phân giải 64-Mel)</i>"]
+            A10["📝 Medical Annotation & EMR Modal<br/><i>(Khoanh vùng bệnh lý, In bệnh án PDF)</i>"]
+        end
     end
 
-    subgraph API_Tier ["⚡ TẦNG DỊCH VỤ BACKEND (FASTAPI + UVICORN)"]
+    %% ==========================================
+    %% 2. BACKEND API GATEWAY
+    %% ==========================================
+    subgraph API_Tier ["⚡ TẦNG DỊCH VỤ BACKEND (FASTAPI + UVICORN REST SERVICE)"]
+        direction TB
         B1["/api/audio/upload & validate"]
-        B2["/api/audio/process (DSP Pipeline)"]
-        B3["/api/audio/visualize (Spectrogram Matrix)"]
-        B4["/api/annotations (CRUD Take-notes)"]
+        B2["/api/audio/process<br/><i>(?profile=...&algorithm=...)</i>"]
+        B3["/api/audio/stream/{id}/raw & cleaned<br/><i>(RFC 7233 HTTP Range-Request)</i>"]
+        B4["/api/audio/visualize<br/><i>(Mel-Spectrogram Matrix JSON)</i>"]
+        B5["/api/annotations & /api/presets<br/><i>(CRUD Ghi chú & Danh mục mẫu)</i>"]
     end
 
-    subgraph Engine_Tier ["🔬 TẦNG XỬ LÝ TÍN HIỆU & AI (CORE ENGINE)"]
-        C1[Audio Preprocessor<br/>Mono, 16kHz, RMS Norm]
-        C2[Acoustic VAD<br/>Energy Envelope + Entropy + 150ms Padding]
-        C3[Bandpass Filter<br/>Butterworth IIR Bậc 4, 50-4000Hz, Zero-phase]
-        C4[Adaptive Spectral Gating<br/>Noise Profile Estimation + Masking]
-        C5[Spectrogram Generator<br/>Mel Filterbank, Decibel Scale Matrix]
-        C1 --> C2 --> C3 --> C4 --> C5
+    %% ==========================================
+    %% 3. PLUGGABLE ENGINE CORE
+    %% ==========================================
+    subgraph Engine_Tier ["🔬 LÕI KHỬ NHIỄU ĐA MIỀN & CHIẾN LƯỢC (CORE ENGINE PIPELINE)"]
+        direction TB
+        C0["🔄 Audio Ingestion & Normalization<br/><i>(Mono, 16kHz Resampling, Peak Norm)</i>"]
+        C1["🛡️ Acoustic VAD Engine<br/><i>(Energy Envelope + Entropy + 150ms Hangover)</i>"]
+        
+        subgraph Strategy_Registry ["🔌 Pluggable Engine Registry (Strategy Pattern)"]
+            E1["⚡ Classical DSP Engine<br/><b>Butterworth Bandpass + Wiener Spectral Gating</b><br/><i>Triệt tiêu 95% tạp âm nền, độ trễ 62ms</i>"]
+            E2["🩺 Bio-Acoustic Engine<br/><b>Hilbert Envelope Heart Sound Filter (25-160Hz)</b><br/><i>Triệt tiêu tiếng tim đập & cọ xát ống nghe (HSAI > 12dB)</i>"]
+            E3["🧠 Real-Time Deep Learning DTLN Engine<br/><b>Dual-Signal ONNX Runtime Model (249 KB)</b><br/><i>Phân tách phi tuyến STFT + Feature Conv, latency < 25ms</i>"]
+        end
+
+        C2["📈 Decibel Mel-Spectrogram Matrix<br/><i>(64 Triangular Mel Bands, Log-power dB)</i>"]
     end
 
-    subgraph Storage_Tier ["💾 TẦNG LƯU TRỮ DỮ LIỆU"]
-        D1[Local Storage: /storage/raw/]
-        D2[Local Storage: /storage/cleaned/]
-        D3[SQLite: metadata.db<br/>Tracks, Annotations, Benchmarks]
+    %% ==========================================
+    %% 4. CLINICAL BENCHMARK SUITE
+    %% ==========================================
+    subgraph Benchmark_Tier ["🎯 BỘ ĐÁNH GIÁ CHẤT LƯỢNG LÂM SÀNG & TIẾNG NÓI (BENCHMARK SUITE)"]
+        M1["📐 Signal Quality:<br/><b>SNR Gốc, SNR Sạch, ΔSNR</b>"]
+        M2["🫁 Respiratory Metrics:<br/><b>CPR (Crackle > 98%), WHF (Wheeze > 96%), HSAI</b>"]
+        M3["🎙️ Speech Metrics:<br/><b>PESQ (ITU-T P.862 > 3.8), STOI (> 0.94), SDR</b>"]
     end
 
-    Client_Tier <==>|HTTP / Multipart Form / JSON| API_Tier
-    API_Tier <==> Engine_Tier
-    API_Tier <==> Storage_Tier
+    %% ==========================================
+    %% 5. DATA PERSISTENCE
+    %% ==========================================
+    subgraph Storage_Tier ["💾 TẦNG LƯU TRỮ DỮ LIỆU & BỘ NHỚ ĐỆM"]
+        D1[("📁 /storage/raw/<br/>Audio WAV Gốc")]
+        D2[("📁 /storage/cleaned/<br/>Audio WAV Đã Khử Nhiễu")]
+        D3[("🗄️ SQLite Database: metadata.db<br/>Tracks, Annotations, Metrics")]
+        D4[("📦 /models/dtln_denoiser.onnx<br/>Deep Learning Model JIT/ONNX")]
+    end
+
+    %% ==========================================
+    %% DATA FLOW CONNECTIONS
+    %% ==========================================
+    UI_INPUTS -->|Upload / Record / Preset| API_Tier
+    UI_CONTROLS -->|Profile & Algorithm Selection| B2
+    B2 --> C0
+    C0 --> C1
+    C1 --> Strategy_Registry
+    Strategy_Registry --> C2
+    Strategy_Registry --> Benchmark_Tier
+    
+    Benchmark_Tier -->|Metrics Object JSON| B2
+    C2 -->|Mel Matrix JSON| B4
+    
+    API_Tier <==>|Binary Range Streaming & JSON| UI_VIZ
+    
+    B1 & B2 --> D1 & D2
+    B5 & B2 <==> D3
+    E3 -.->|Load Weights| D4
+
+    %% ==========================================
+    %% CLASS STYLES
+    %% ==========================================
+    classDef uiStyle fill:#0F172A,stroke:#38BDF8,stroke-width:2px,color:#F8FAFC;
+    classDef apiStyle fill:#0F172A,stroke:#A855F7,stroke-width:2px,color:#F8FAFC;
+    classDef engineStyle fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#F8FAFC;
+    classDef metricStyle fill:#0F172A,stroke:#F59E0B,stroke-width:2px,color:#F8FAFC;
+    classDef storageStyle fill:#0F172A,stroke:#64748B,stroke-width:2px,color:#F8FAFC;
+
+    class Client_Tier,UI_INPUTS,UI_CONTROLS,UI_VIZ,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10 uiStyle;
+    class API_Tier,B1,B2,B3,B4,B5 apiStyle;
+    class Engine_Tier,C0,C1,C2,Strategy_Registry,E1,E2,E3 engineStyle;
+    class Benchmark_Tier,M1,M2,M3 metricStyle;
+    class Storage_Tier,D1,D2,D3,D4 storageStyle;
 ```
 
 ---

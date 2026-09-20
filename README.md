@@ -25,31 +25,115 @@ Hệ thống **Respiratory Sound Denoising & Visualization (RSDV)** là nền t�
 
 ## 2. Kiến Trúc Hệ Thống (System Architecture)
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     DOCTOR DASHBOARD (React + Vite)                     │
-│  - Raw Audio Recording Studio (Hardware Filter Bypass: AGC/AEC/NS Off)  │
-│  - Dual WaveSurfer.js Synchronized Player (60 FPS Cursor Tracking)      │
-│  - Instant A/B Audio Switcher (0ms Gain Swap via Tab/Spacebar)          │
-│  - Canvas Mel-Spectrogram (256-color Medical Magma LUT & Grid)          │
-│  - Medical Annotation Tool & Print-Ready EMR Summary Modal              │
-└────────────────────────────────────▲────────────────────────────────────┘
-                                     │ REST APIs & Binary Streaming
-┌────────────────────────────────────▼────────────────────────────────────┐
-│                       FASTAPI BACKEND SERVICE                           │
-│  - Range-Request Audio Streaming (RFC 7233)                             │
-│  - SQLite Clinical Metadata Layer (Cascading Records & Annotations)     │
-│  - Medical Preset Generator (Wheeze, Crackles, Rhonchi, Normal)         │
-└────────────────────────────────────▲────────────────────────────────────┘
-                                     │ Internal DSP Pipeline Invocations
-┌────────────────────────────────────▼────────────────────────────────────┐
-│                          DSP CORE ENGINE                                │
-│  1. Audio IO: Stereo-to-Mono, 16kHz Resampling, Peak Normalization      │
-│  2. Zero-Phase Butterworth Bandpass Filter (50 Hz - 4000 Hz, Order 4)   │
-│  3. Acoustic Energy & Spectral Entropy VAD Engine                       │
-│  4. Adaptive Spectral Gating (STFT, Wiener Gating, iSTFT Overlap-Add)   │
-│  5. Decibel Mel-Spectrogram (64 Triangular Mel Bands, Log-power dB)     │
-└─────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    %% ==========================================
+    %% 1. FRONTEND TIER
+    %% ==========================================
+    subgraph UI_TIER ["🖥️ TẦNG GIAO DIỆN BÁC SĨ (DOCTOR DASHBOARD - REACT + VITE)"]
+        direction TB
+        subgraph UI_INPUTS ["🎙️ Thu Nhận Âm Thanh & Presets"]
+            U1["🎤 Live Recording Studio<br/><i>(Bypass Hardware AGC/AEC/NS)</i>"]
+            U2["📁 Audio File Upload<br/><i>(.WAV / .MP3)</i>"]
+            U3["📋 4 Bệnh Án Mẫu Presets<br/><i>(Wheeze, Crackles, Rhonchi, Normal)</i>"]
+        end
+
+        subgraph UI_CONTROLS ["🎛️ Dual-Profile & Strategy Toolbar"]
+            U4["🫁 Profile Tiếng Phổi<br/><i>(50-2500Hz, CPR & WHF)</i>"]
+            U5["🎙️ Profile Tiếng Nói<br/><i>(80-7500Hz, PESQ & STOI)</i>"]
+            U6["⚙️ Algorithm Selector<br/><i>(Classical / Bio-Acoustic / DTLN AI)</i>"]
+        end
+
+        subgraph UI_VIZ ["📊 Không Gian Thẩm Định Trực Quan (Medical Studio)"]
+            U7["〰️ Dual WaveSurfer Player<br/><i>(Đồng bộ 60 FPS, Kênh Gốc vs Kênh Sạch)</i>"]
+            U8["⚡ Instant A/B Audio Switcher<br/><i>(Chuyển kênh tức thì 0ms qua Tab/Spacebar)</i>"]
+            U9["🌈 Interactive Mel-Spectrogram<br/><i>(256-color Magma LUT, Phân giải 64-Mel)</i>"]
+            U10["📝 Medical Annotation & EMR Modal<br/><i>(Khoanh vùng bệnh lý, In bệnh án PDF)</i>"]
+        end
+    end
+
+    %% ==========================================
+    %% 2. BACKEND API GATEWAY
+    %% ==========================================
+    subgraph API_TIER ["⚡ TẦNG DỊCH VỤ BACKEND (FASTAPI + UVICORN REST SERVICE)"]
+        direction TB
+        A1["/api/audio/upload & validate"]
+        A2["/api/audio/process<br/><i>(?profile=...&algorithm=...)</i>"]
+        A3["/api/audio/stream/{id}/raw & cleaned<br/><i>(RFC 7233 HTTP Range-Request)</i>"]
+        A4["/api/audio/visualize<br/><i>(Mel-Spectrogram Matrix JSON)</i>"]
+        A5["/api/annotations & /api/presets<br/><i>(CRUD Ghi chú & Danh mục mẫu)</i>"]
+    end
+
+    %% ==========================================
+    %% 3. PLUGGABLE ENGINE CORE
+    %% ==========================================
+    subgraph CORE_TIER ["🔬 LÕI KHỬ NHIỄU ĐA MIỀN & CHIẾN LƯỢC (CORE ENGINE PIPELINE)"]
+        direction TB
+        P0["🔄 Audio Ingestion & Normalization<br/><i>(Mono, 16kHz Resampling, Peak Norm)</i>"]
+        P1["🛡️ Acoustic VAD Engine<br/><i>(Energy Envelope + Entropy + 150ms Hangover)</i>"]
+        
+        subgraph STRATEGY_REGISTRY ["🔌 Pluggable Engine Registry (Strategy Pattern)"]
+            E1["⚡ Classical DSP Engine<br/><b>Butterworth Bandpass + Wiener Spectral Gating</b><br/><i>Triệt tiêu 95% tạp âm nền, độ trễ 62ms</i>"]
+            E2["🩺 Bio-Acoustic Engine<br/><b>Hilbert Envelope Heart Sound Filter (25-160Hz)</b><br/><i>Triệt tiêu tiếng tim đập & cọ xát ống nghe (HSAI > 12dB)</i>"]
+            E3["🧠 Real-Time Deep Learning DTLN Engine<br/><b>Dual-Signal ONNX Runtime Model (249 KB)</b><br/><i>Phân tách phi tuyến STFT + Feature Conv, latency < 25ms</i>"]
+        end
+
+        P2["📈 Decibel Mel-Spectrogram Matrix<br/><i>(64 Triangular Mel Bands, Log-power dB)</i>"]
+    end
+
+    %% ==========================================
+    %% 4. CLINICAL BENCHMARK SUITE
+    %% ==========================================
+    subgraph BENCHMARK_TIER ["🎯 BỘ ĐÁNH GIÁ CHẤT LƯỢNG LÂM SÀNG & TIẾNG NÓI (BENCHMARK SUITE)"]
+        M1["📐 Signal Quality:<br/><b>SNR Gốc, SNR Sạch, ΔSNR</b>"]
+        M2["🫁 Respiratory Metrics:<br/><b>CPR (Crackle > 98%), WHF (Wheeze > 96%), HSAI</b>"]
+        M3["🎙️ Speech Metrics:<br/><b>PESQ (ITU-T P.862 > 3.8), STOI (> 0.94), SDR</b>"]
+    end
+
+    %% ==========================================
+    %% 5. DATA PERSISTENCE
+    %% ==========================================
+    subgraph STORAGE_TIER ["💾 TẦNG LƯU TRỮ DỮ LIỆU & BỘ NHỚ ĐỆM"]
+        S1[("📁 /storage/raw/<br/>Audio WAV Gốc")]
+        S2[("📁 /storage/cleaned/<br/>Audio WAV Đã Khử Nhiễu")]
+        S3[("🗄️ SQLite Database: metadata.db<br/>Tracks, Annotations, Metrics")]
+        S4[("📦 /models/dtln_denoiser.onnx<br/>Deep Learning Model JIT/ONNX")]
+    end
+
+    %% ==========================================
+    %% DATA FLOW CONNECTIONS
+    %% ==========================================
+    UI_INPUTS -->|Upload / Record / Preset| API_TIER
+    UI_CONTROLS -->|Profile & Algorithm Selection| A2
+    A2 --> P0
+    P0 --> P1
+    P1 --> STRATEGY_REGISTRY
+    STRATEGY_REGISTRY --> P2
+    STRATEGY_REGISTRY --> BENCHMARK_TIER
+    
+    BENCHMARK_TIER -->|Metrics Object JSON| A2
+    P2 -->|Mel Matrix JSON| A4
+    
+    API_TIER <==>|Binary Range Streaming & JSON| UI_VIZ
+    
+    A1 & A2 --> S1 & S2
+    A5 & A2 <==> S3
+    E3 -.->|Load Weights| S4
+
+    %% ==========================================
+    %% CLASS STYLES
+    %% ==========================================
+    classDef uiStyle fill:#0F172A,stroke:#38BDF8,stroke-width:2px,color:#F8FAFC;
+    classDef apiStyle fill:#0F172A,stroke:#A855F7,stroke-width:2px,color:#F8FAFC;
+    classDef engineStyle fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#F8FAFC;
+    classDef metricStyle fill:#0F172A,stroke:#F59E0B,stroke-width:2px,color:#F8FAFC;
+    classDef storageStyle fill:#0F172A,stroke:#64748B,stroke-width:2px,color:#F8FAFC;
+
+    class UI_TIER,UI_INPUTS,UI_CONTROLS,UI_VIZ,U1,U2,U3,U4,U5,U6,U7,U8,U9,U10 uiStyle;
+    class API_TIER,A1,A2,A3,A4,A5 apiStyle;
+    class CORE_TIER,P0,P1,P2,STRATEGY_REGISTRY,E1,E2,E3 engineStyle;
+    class BENCHMARK_TIER,M1,M2,M3 metricStyle;
+    class STORAGE_TIER,S1,S2,S3,S4 storageStyle;
 ```
 
 ---
