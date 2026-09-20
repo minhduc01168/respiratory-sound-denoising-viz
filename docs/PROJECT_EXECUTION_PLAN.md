@@ -134,19 +134,33 @@ flowchart TB
     E3 -.->|Load Weights| D4
 
     %% ==========================================
-    %% CLASS STYLES
+    %% LIGHT THEME STYLES (DỄ NHÌN, TƯƠNG PHẢN CAO)
     %% ==========================================
-    classDef uiStyle fill:#0F172A,stroke:#38BDF8,stroke-width:2px,color:#F8FAFC;
-    classDef apiStyle fill:#0F172A,stroke:#A855F7,stroke-width:2px,color:#F8FAFC;
-    classDef engineStyle fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#F8FAFC;
-    classDef metricStyle fill:#0F172A,stroke:#F59E0B,stroke-width:2px,color:#F8FAFC;
-    classDef storageStyle fill:#0F172A,stroke:#64748B,stroke-width:2px,color:#F8FAFC;
+    style Client_Tier fill:#F0F9FF,stroke:#0284C7,stroke-width:2px,color:#0369A1
+    style UI_INPUTS fill:#E0F2FE,stroke:#38BDF8,stroke-width:1.5px,color:#0369A1
+    style UI_CONTROLS fill:#E0F2FE,stroke:#38BDF8,stroke-width:1.5px,color:#0369A1
+    style UI_VIZ fill:#E0F2FE,stroke:#38BDF8,stroke-width:1.5px,color:#0369A1
 
-    class Client_Tier,UI_INPUTS,UI_CONTROLS,UI_VIZ,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10 uiStyle;
-    class API_Tier,B1,B2,B3,B4,B5 apiStyle;
-    class Engine_Tier,C0,C1,C2,Strategy_Registry,E1,E2,E3 engineStyle;
-    class Benchmark_Tier,M1,M2,M3 metricStyle;
-    class Storage_Tier,D1,D2,D3,D4 storageStyle;
+    style API_Tier fill:#FAF5FF,stroke:#7C3AED,stroke-width:2px,color:#581C87
+    
+    style Engine_Tier fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#065F46
+    style Strategy_Registry fill:#DCFCE7,stroke:#34D399,stroke-width:1.5px,color:#065F46
+
+    style Benchmark_Tier fill:#FFFBEB,stroke:#D97706,stroke-width:2px,color:#92400E
+
+    style Storage_Tier fill:#F8FAFC,stroke:#475569,stroke-width:2px,color:#1E293B
+
+    classDef uiCard fill:#FFFFFF,stroke:#0284C7,stroke-width:1.5px,color:#0F172A;
+    classDef apiCard fill:#FFFFFF,stroke:#7C3AED,stroke-width:1.5px,color:#0F172A;
+    classDef engineCard fill:#FFFFFF,stroke:#059669,stroke-width:1.5px,color:#0F172A;
+    classDef metricCard fill:#FFFFFF,stroke:#D97706,stroke-width:1.5px,color:#0F172A;
+    classDef storageCard fill:#FFFFFF,stroke:#475569,stroke-width:1.5px,color:#0F172A;
+
+    class A1,A2,A3,A4,A5,A6,A7,A8,A9,A10 uiCard;
+    class B1,B2,B3,B4,B5 apiCard;
+    class C0,C1,C2,E1,E2,E3 engineCard;
+    class M1,M2,M3 metricCard;
+    class D1,D2,D3,D4 storageCard;
 ```
 
 ---
