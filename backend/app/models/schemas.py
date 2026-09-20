@@ -58,3 +58,6 @@ class ProcessAudioResponse(BaseModel):
     spectrogram: Dict[str, Any]
     raw_stream_url: str
     cleaned_stream_url: str
+    algorithm: Optional[str] = "classical_dsp"
+    profile: Optional[str] = "respiratory"
+

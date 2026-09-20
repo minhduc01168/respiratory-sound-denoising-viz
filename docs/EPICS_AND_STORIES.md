@@ -9,19 +9,21 @@
 ## TỔNG QUAN PHÂN BỔ EPICS
 
 ```mermaid
-pie title Phân bổ Story Points theo Epic (Tổng: 58 Points)
+pie title Phân bổ Story Points theo Epic (Tổng: 81 Points)
     "Epic 1: DSP Core Engine" : 18
     "Epic 2: FastAPI Backend Core" : 13
     "Epic 3: Doctor Dashboard & Viz" : 19
     "Epic 4: E2E Integration & Verification" : 8
+    "Epic 5: Advanced Dual-Profile Denoising" : 23
 ```
 
 | Epic ID | Tên Epic | Số Stories | Story Points | Ưu tiên | Trạng thái Mục tiêu |
 |---|---|:---:|:---:|:---:|---|
-| **EPIC-1** | Lõi Xử Lý Tín Hiệu DSP & Thuật Toán Khử Nhiễu | 6 | 18 | P0 (Critical) | Sprint 1 (Tuần 1 - 2) |
-| **EPIC-2** | Dịch Vụ Backend FastAPI & Tầng Dữ Liệu Y Tế | 7 | 13 | P0 (Critical) | Sprint 2 (Tuần 3) |
-| **EPIC-3** | Bảng Điều Khiển Bác Sĩ & Trực Quan Hóa Âm Học | 7 | 19 | P0 (Critical) | Sprint 3 (Tuần 4 - 5) |
-| **EPIC-4** | Tích Hợp E2E, Thẩm Định Y Tế & Đóng Gói | 4 | 8 | P1 (High) | Sprint 4 (Tuần 6) |
+| **EPIC-1** | Lõi Xử Lý Tín Hiệu DSP & Thuật Toán Khử Nhiễu | 6 | 18 | P0 (Critical) | Sprint 1 (Hoàn thành) |
+| **EPIC-2** | Dịch Vụ Backend FastAPI & Tầng Dữ Liệu Y Tế | 7 | 13 | P0 (Critical) | Sprint 2 (Hoàn thành) |
+| **EPIC-3** | Bảng Điều Khiển Bác Sĩ & Trực Quan Hóa Âm Học | 7 | 19 | P0 (Critical) | Sprint 3 (Hoàn thành) |
+| **EPIC-4** | Tích Hợp E2E, Thẩm Định Y Tế & Đóng Gói | 4 | 8 | P1 (High) | Sprint 4 (Hoàn thành) |
+| **EPIC-5** | Nghiên Cứu Chuyên Sâu & Tối Ưu Hóa Khử Nhiễu Đa Miền (Dual Profile) | 6 | 23 | P0 (Critical) | Sprint 5 (Sắp triển khai) |
 
 ---
 
@@ -262,3 +264,64 @@ pie title Phân bổ Story Points theo Epic (Tổng: 58 Points)
   - **Given:** Máy tính có cài đặt Python 3.10+ và NodeJS 18+.
   - **When:** Người dùng nhấp đúp vào `start.bat`.
   - **Then:** Cả Backend (port 8000) và Frontend (port 5173) tự động khởi động và trình duyệt tự động mở trang web ứng dụng.
+
+---
+
+### 🟣 EPIC 5: NGHIÊN CỨU CHUYÊN SÂU & TỐI ƯU HÓA KHỬ NHIỄU ĐA MIỀN (ADVANCED DUAL-PROFILE DENOISING ENGINE)
+**Mục tiêu:** Nâng cấp hệ thống từ lọc DSP đơn lẻ lên kiến trúc đa thuật toán Pluggable Engine, hỗ trợ **Dual Audio Profile (Tiếng phổi & Tiếng nói)**, tích hợp mô hình Deep Learning thời gian thực qua ONNX Runtime (< 35ms trên CPU) và thuật toán sinh học bóc tách tiếng tim đập.
+> **Tài liệu nghiên cứu cơ sở:** [ADVANCED_DENOISING_RESEARCH.md](file:///d:/Slide_THPT/PhanDangKhanh_AI/respiratory-sound-denoising-viz/docs/ADVANCED_DENOISING_RESEARCH.md)
+
+#### Story 5.1: Dual-Domain Acoustic Research Whitepaper
+- **Key:** `5-1-dual-domain-acoustic-whitepaper`
+- **Story Points:** 3 | **Ưu tiên:** P0
+- **Mô tả:** Là một Technical Writer & Nghiên cứu sinh AI, tôi muốn tài liệu hóa toàn diện cơ sở toán học của các thuật toán DSP & Deep Learning (DTLN, DCCRN, Wave-U-Net, WPT, EMD), lập ma trận so sánh đối sánh âm học giữa Tiếng phổi và Tiếng nói, và xác lập bộ chỉ số y tế chuẩn xác (CPR, WHF, HSAI).
+- **Tiêu chí chấp nhận (AC):**
+  - **Given:** Yêu cầu nghiên cứu sâu về thuật toán khử nhiễu đa miền âm học.
+  - **When:** Xuất bản tài liệu `docs/ADVANCED_DENOISING_RESEARCH.md`.
+  - **Then:** Tài liệu gồm tối thiểu 6 chương, có sơ đồ Mermaid chi tiết, công thức toán LaTeX đầy đủ, ma trận so sánh các thuật toán và phân tích sự khác biệt giữa hai profile `respiratory` vs `speech`.
+
+#### Story 5.2: Dual Audio Profile Schema & Strategy Pattern Engine
+- **Key:** `5-2-dual-profile-strategy-pattern-engine`
+- **Story Points:** 4 | **Ưu tiên:** P0
+- **Mô tả:** Là một System Architect, tôi muốn thiết kế kiến trúc Strategy Pattern cho `backend/app/engine/` với lớp trừu tượng `BaseDenoisingEngine` và cấu hình Pydantic `AudioProfileConfig` hỗ trợ hai profile: `respiratory` (50–2500Hz, bảo tồn rale) và `speech` (80–7500Hz, tối ưu âm rõ nét), cho phép cắm rút thuật toán linh hoạt qua API query/body.
+- **Tiêu chí chấp nhận (AC):**
+  - **Given:** API endpoint `/api/audio/process` nhận thêm tham số `profile: Literal["respiratory", "speech"]` và `algorithm: str`.
+  - **When:** Gửi request xử lý với profile tương ứng.
+  - **Then:** Hệ thống tự động kích hoạt bộ tham số lọc thông dải, ngưỡng VAD và hệ số triệt tiêu phù hợp; code cũ (default profile) hoạt động bình thường 100% không bị breaking change.
+
+#### Story 5.3: Biological Heart Sound & Friction Suppression Module
+- **Key:** `5-3-bio-acoustic-heart-sound-filter`
+- **Story Points:** 4 | **Ưu tiên:** P1
+- **Mô tả:** Là một kỹ sư DSP, tôi muốn xây dựng module lọc sinh học dựa trên Wavelet Packet Transform (WPT) và phân tích năng lượng dải tần số 20Hz – 150Hz để làm sạch tiếng tim đập (Heart Sounds S1/S2) và tiếng cọ xát ống nghe mà không làm suy hao âm phế nang ở đáy phổi.
+- **Tiêu chí chấp nhận (AC):**
+  - **Given:** Bản ghi âm thanh hô hấp có tạp âm tiếng tim đập rõ rệt chèn vào thì thở.
+  - **When:** Áp dụng engine `bio_acoustic` với `profile="respiratory"`.
+  - **Then:** Chỉ số suy giảm tiếng tim $\text{HSAI} \ge 10\text{ dB}$, bảo tồn $\ge 90\%$ năng lượng âm thở phế nang, không sinh nhiễu nhân tạo.
+
+#### Story 5.4: Real-time DTLN Deep Learning Engine via ONNX Runtime
+- **Key:** `5-4-realtime-deep-learning-onnx-engine`
+- **Story Points:** 5 | **Ưu tiên:** P0
+- **Mô tả:** Là một kỹ sư AI, tôi muốn tích hợp mô hình học sâu thời gian thực DTLN (Dual-Signal Transformation LSTM) được lượng hóa và đóng gói định dạng ONNX (`dtln_denoiser.onnx`), nạp qua ONNX Runtime CPU để đạt khả năng khử nhiễu sâu ($\Delta\text{SNR} \ge +12\text{ dB}$) với độ trễ suy luận $< 35\text{ms}$.
+- **Tiêu chí chấp nhận (AC):**
+  - **Given:** File âm thanh 15 giây đầu vào.
+  - **When:** Xử lý bằng `dtln_ai` engine.
+  - **Then:** Thời gian suy luận mô hình trên CPU $\le 35\text{ms}$, $\Delta\text{SNR} \ge +12\text{ dB}$, PESQ cải thiện $\ge +0.8$ điểm, RAM tiêu thụ thêm $< 50\text{MB}$.
+
+#### Story 5.5: Multi-Metric Clinical & Speech Quality Benchmark Suite
+- **Key:** `5-5-clinical-speech-benchmark-suite`
+- **Story Points:** 4 | **Ưu tiên:** P1
+- **Mô tả:** Là một Test Architect, tôi muốn mở rộng module `metrics.py` và test suite để tính toán tự động cả chỉ số âm học tiếng nói (PESQ, STOI, SDR, LSD) lẫn chỉ số âm học phổi độc quyền (CPR - Crackle Preservation Rate, WHF - Wheeze Harmonic Fidelity), phục vụ đánh giá A/B khách quan giữa các engine.
+- **Tiêu chí chấp nhận (AC):**
+  - **Given:** Cặp tín hiệu âm thanh trước và sau xử lý của cả hai profile `respiratory` và `speech`.
+  - **When:** Chạy hàm `evaluate_comprehensive_benchmark(raw, clean, sr, profile)`.
+  - **Then:** Trả về dictionary đầy đủ các chỉ số tương ứng theo đúng profile; 100% test cases trong `tests/test_benchmark.py` pass.
+
+#### Story 5.6: Multi-Algorithm & Dual Profile Selector UI
+- **Key:** `5-6-multi-algorithm-dual-profile-ui`
+- **Story Points:** 3 | **Ưu tiên:** P1
+- **Mô tả:** Là một bác sĩ / chuyên gia âm học, tôi muốn trên thanh công cụ của Dashboard có nút chuyển nhanh giữa **Chế độ Phổi (🫁 Respiratory)** và **Chế độ Tiếng nói (🎙️ Speech)**, kèm theo dropdown chọn thuật toán (`Classical DSP`, `Deep AI DTLN`, `Bio-Acoustic Heart Filter`) để trực tiếp trải nghiệm và đối chiếu A/B trên biểu đồ Mel-Spectrogram.
+- **Tiêu chí chấp nhận (AC):**
+  - **Given:** Người dùng mở giao diện Dashboard.
+  - **When:** Chọn thay đổi Profile hoặc Algorithm trên thanh điều khiển.
+  - **Then:** Trạng thái gửi request lên backend thay đổi tức thì, kết quả Waveform, Spectrogram và MetricsCard cập nhật đồng bộ các chỉ số tương ứng mà không cần reload trang.
+

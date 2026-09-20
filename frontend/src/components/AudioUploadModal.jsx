@@ -1,7 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { UploadCloud, X, FileAudio, Check, AlertCircle, Loader2 } from 'lucide-react';
 
-export default function AudioUploadModal({ isOpen, onClose, onProcessed }) {
+export default function AudioUploadModal({
+  isOpen,
+  onClose,
+  onProcessed,
+  activeProfile = 'respiratory',
+  activeAlgorithm = 'classical_dsp',
+}) {
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -72,8 +78,11 @@ export default function AudioUploadModal({ isOpen, onClose, onProcessed }) {
       const uploadData = await uploadRes.json();
       const audioId = uploadData.audio_id;
 
-      // Process DSP
-      const processRes = await fetch(`/api/audio/process/${audioId}`, { method: 'POST' });
+      // Process DSP with active profile and strategy algorithm
+      const processRes = await fetch(
+        `/api/audio/process/${audioId}?profile=${activeProfile}&algorithm=${activeAlgorithm}`,
+        { method: 'POST' }
+      );
       if (!processRes.ok) {
         throw new Error('Lỗi xử lý thuật toán khử nhiễu');
       }

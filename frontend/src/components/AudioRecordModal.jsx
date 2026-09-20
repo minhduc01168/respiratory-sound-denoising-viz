@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Mic, Square, X, AlertTriangle, Sparkles, Loader2 } from 'lucide-react';
 
-export default function AudioRecordModal({ isOpen, onClose, onProcessed }) {
+export default function AudioRecordModal({
+  isOpen,
+  onClose,
+  onProcessed,
+  activeProfile = 'respiratory',
+  activeAlgorithm = 'classical_dsp',
+}) {
   const [isRecording, setIsRecording] = useState(false);
   const [recordTime, setRecordTime] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -160,8 +166,11 @@ export default function AudioRecordModal({ isOpen, onClose, onProcessed }) {
       const uploadData = await uploadRes.json();
       const audioId = uploadData.audio_id;
 
-      // 2. Process DSP pipeline
-      const processRes = await fetch(`/api/audio/process/${audioId}`, { method: 'POST' });
+      // 2. Process DSP pipeline with active profile and algorithm
+      const processRes = await fetch(
+        `/api/audio/process/${audioId}?profile=${activeProfile}&algorithm=${activeAlgorithm}`,
+        { method: 'POST' }
+      );
       if (!processRes.ok) {
         throw new Error('Lỗi trong quá trình xử lý tín hiệu khử nhiễu');
       }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import PresetSelector from './components/PresetSelector';
+import Toolbar from './components/Toolbar';
 import MetricsCard from './components/MetricsCard';
 import DualWaveformPlayer from './components/DualWaveformPlayer';
 import MelSpectrogramViewer from './components/MelSpectrogramViewer';
@@ -17,6 +18,10 @@ export default function App() {
   const [activeAudioType, setActiveAudioType] = useState('cleaned'); // 'cleaned' | 'raw'
   const [currentTime, setCurrentTime] = useState(0);
   const [selectedRegion, setSelectedRegion] = useState(null);
+
+  // Epic 5 Dual Profile & Multi-Engine Strategy state
+  const [activeProfile, setActiveProfile] = useState('respiratory');
+  const [activeAlgorithm, setActiveAlgorithm] = useState('classical_dsp');
 
   // Modal states
   const [isRecordModalOpen, setIsRecordModalOpen] = useState(false);
@@ -36,11 +41,11 @@ export default function App() {
       .catch((err) => console.error('Presets init failed:', err));
   }, []);
 
-  const handleSelectPreset = (preset) => {
+  const handleSelectPreset = (preset, profile = activeProfile, algo = activeAlgorithm) => {
     setActiveCase(preset);
     setIsProcessing(true);
     setSelectedRegion(null);
-    fetch(`/api/audio/process/${preset.id}`, { method: 'POST' })
+    fetch(`/api/audio/process/${preset.id}?profile=${profile}&algorithm=${algo}`, { method: 'POST' })
       .then((res) => res.json())
       .then((result) => {
         setMetrics(result.metrics);
@@ -49,6 +54,20 @@ export default function App() {
       .catch(() => {
         setIsProcessing(false);
       });
+  };
+
+  const handleProfileChange = (newProfile) => {
+    setActiveProfile(newProfile);
+    if (activeCase) {
+      handleSelectPreset(activeCase, newProfile, activeAlgorithm);
+    }
+  };
+
+  const handleAlgorithmChange = (newAlgo) => {
+    setActiveAlgorithm(newAlgo);
+    if (activeCase) {
+      handleSelectPreset(activeCase, activeProfile, newAlgo);
+    }
   };
 
   const handleAudioProcessed = (result, newCase) => {
@@ -74,6 +93,17 @@ export default function App() {
         activeCaseId={activeCase?.id}
         onSelectPreset={handleSelectPreset}
       />
+
+      {/* 2.5 Pluggable Acoustic Strategy Toolbar */}
+      <div style={{ padding: '0 1rem 1rem 1rem' }}>
+        <Toolbar
+          activeProfile={activeProfile}
+          onProfileChange={handleProfileChange}
+          activeAlgorithm={activeAlgorithm}
+          onAlgorithmChange={handleAlgorithmChange}
+          isProcessing={isProcessing}
+        />
+      </div>
 
       {/* 3. Main Medical Studio Workspace */}
       <main
@@ -127,12 +157,16 @@ export default function App() {
         isOpen={isRecordModalOpen}
         onClose={() => setIsRecordModalOpen(false)}
         onProcessed={handleAudioProcessed}
+        activeProfile={activeProfile}
+        activeAlgorithm={activeAlgorithm}
       />
 
       <AudioUploadModal
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
         onProcessed={handleAudioProcessed}
+        activeProfile={activeProfile}
+        activeAlgorithm={activeAlgorithm}
       />
 
       <ReportModal

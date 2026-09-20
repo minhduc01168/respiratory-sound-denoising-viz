@@ -9,6 +9,7 @@ from backend.app.core.database import create_audio_record, get_audio_record
 from backend.app.engine.audio_io import load_and_resample_audio, save_wav
 from backend.app.engine.metrics import calculate_snr, calculate_snr_improvement
 from backend.app.engine.pipeline import process_respiratory_audio
+from backend.app.engine.registry import engine_registry
 from backend.app.engine.spectrogram import get_spectrogram_payload
 from backend.app.models.schemas import ProcessAudioResponse
 
@@ -96,14 +97,16 @@ async def upload_audio(file: UploadFile = File(...)):
 @router.post("/process/{audio_id}", response_model=ProcessAudioResponse)
 async def process_audio(
     audio_id: str,
-    lowcut: float = Query(50.0, description="Tần số cắt dưới (Hz)"),
-    highcut: float = Query(4000.0, description="Tần số cắt trên (Hz)"),
+    lowcut: Optional[float] = Query(None, description="Tần số cắt dưới (Hz) - mặc định theo profile"),
+    highcut: Optional[float] = Query(None, description="Tần số cắt trên (Hz) - mặc định theo profile"),
     trim_silence: bool = Query(True, description="Tự động cắt khoảng lặng vô ích"),
     spectral_gating: bool = Query(True, description="Lọc tiếng ồn nền thích ứng"),
+    profile: str = Query("respiratory", description="Hồ sơ âm học: 'respiratory' (tiếng phổi) hoặc 'speech' (tiếng nói)"),
+    algorithm: str = Query("classical_dsp", description="Thuật toán khử nhiễu: 'classical_dsp', v.v."),
 ):
     """
-    Execute full DSP denoising pipeline on uploaded raw recording:
-    Butterworth Bandpass + VAD + Spectral Gating + Mel-Spectrogram Extraction.
+    Execute pluggable audio denoising pipeline on uploaded raw recording:
+    Supports Dual Audio Profiles (Respiratory & Speech) and multiple Strategy Engines.
     """
     raw_path = settings.RAW_DIR / f"{audio_id}.wav"
     if not raw_path.exists():
@@ -122,6 +125,8 @@ async def process_audio(
             highcut=highcut,
             trim_silence_flag=trim_silence,
             spectral_gating_flag=spectral_gating,
+            profile=profile,
+            algorithm=algorithm,
         )
     except Exception as e:
         raise HTTPException(
@@ -179,7 +184,31 @@ async def process_audio(
         spectrogram=pipeline_result["spectrogram"],
         raw_stream_url=f"/api/audio/stream/{audio_id}/raw",
         cleaned_stream_url=f"/api/audio/stream/{audio_id}/cleaned",
+        algorithm=pipeline_result.get("algorithm", algorithm),
+        profile=pipeline_result.get("profile", profile),
     )
+
+
+@router.get("/algorithms")
+async def list_available_algorithms():
+    """
+    Liệt kê danh sách các thuật toán khử nhiễu và hồ sơ âm học (Profiles) có sẵn trong hệ thống.
+    """
+    return {
+        "algorithms": engine_registry.list_algorithms(),
+        "profiles": [
+            {
+                "id": "respiratory",
+                "name": "Âm Thanh Hô Hấp (Respiratory)",
+                "description": "Tối ưu hóa bảo tồn rale nổ (Crackles), rale rít (Wheezes), dải tần 50-2500Hz.",
+            },
+            {
+                "id": "speech",
+                "name": "Tiếng Nói Lâm Sàng (Speech)",
+                "description": "Tối ưu hóa độ rõ nét âm vị và Formants tiếng nói, dải tần rộng 80-7500Hz.",
+            },
+        ],
+    }
 
 
 @router.get("/spectrogram/{audio_id}")

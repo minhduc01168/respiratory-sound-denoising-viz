@@ -31,11 +31,11 @@ tracking_system: file-system
 story_location: docs/stories
 
 sprint_info:
-  current_sprint: 4
-  sprint_goal: "Tích Hợp E2E, Thẩm Định Y Tế & Đóng Gói Một Chạm (Packaging & Validation)"
-  start_date: "2026-11-02"
-  end_date: "2026-11-15"
-  total_sprints: 4
+  current_sprint: 5
+  sprint_goal: "Nghiên Cứu Chuyên Sâu, Hỗ Trợ Dual Audio Profile (Phổi & Tiếng Nói) & Tích Hợp AI Denoising Engine"
+  start_date: "2026-11-16"
+  end_date: "2026-11-29"
+  total_sprints: 5
   sprint_cadence: "1-2 weeks per sprint"
 
 development_status:
@@ -86,6 +86,18 @@ development_status:
   4-3-clinical-metric-report: done
   4-4-one-click-startup-packaging: done
   epic-4-retrospective: done
+
+  # ==============================================================================
+  # EPIC 5: Nghiên Cứu Chuyên Sâu & Tối Ưu Hóa Khử Nhiễu Đa Miền (23 Points) - SPRINT 5
+  # ==============================================================================
+  epic-5: done
+  5-1-dual-domain-acoustic-whitepaper: done
+  5-2-dual-profile-strategy-pattern-engine: done
+  5-3-bio-acoustic-heart-sound-filter: done
+  5-4-realtime-deep-learning-onnx-engine: done
+  5-5-clinical-speech-benchmark-suite: done
+  5-6-multi-algorithm-dual-profile-ui: done
+  epic-5-retrospective: done
 
 # Chi tiết Stories Metadata phục vụ truy vấn & CI/CD
 stories_detail:
@@ -272,14 +284,66 @@ stories_detail:
       - start.bat
       - docker-compose.yml
 
+  5-1-dual-domain-acoustic-whitepaper:
+    title: "Dual-Domain Acoustic Research Whitepaper (Lung Sounds & Speech)"
+    epic: 5
+    story_points: 3
+    priority: "P0"
+    target_files:
+      - docs/ADVANCED_DENOISING_RESEARCH.md
+  5-2-dual-profile-strategy-pattern-engine:
+    title: "Dual Audio Profile Schema & Strategy Pattern Engine"
+    epic: 5
+    story_points: 4
+    priority: "P0"
+    target_files:
+      - backend/app/engine/base.py
+      - backend/app/engine/profiles.py
+      - backend/app/engine/registry.py
+      - backend/app/api/routes_process.py
+  5-3-bio-acoustic-heart-sound-filter:
+    title: "Biological Heart Sound & Friction Suppression Module"
+    epic: 5
+    story_points: 4
+    priority: "P1"
+    target_files:
+      - backend/app/engine/bio_acoustic.py
+      - backend/tests/test_bio_acoustic.py
+  5-4-realtime-deep-learning-onnx-engine:
+    title: "Real-time DTLN Deep Learning Engine via ONNX Runtime"
+    epic: 5
+    story_points: 5
+    priority: "P0"
+    target_files:
+      - backend/app/engine/dl_onnx.py
+      - backend/app/models/dtln_denoiser.onnx
+      - backend/tests/test_dl_onnx.py
+  5-5-clinical-speech-benchmark-suite:
+    title: "Multi-Metric Clinical & Speech Quality Benchmark Suite"
+    epic: 5
+    story_points: 4
+    priority: "P1"
+    target_files:
+      - backend/app/engine/metrics.py
+      - backend/tests/test_benchmark.py
+  5-6-multi-algorithm-dual-profile-ui:
+    title: "Multi-Algorithm & Dual Profile Selector UI"
+    epic: 5
+    story_points: 3
+    priority: "P1"
+    target_files:
+      - frontend/src/components/DualWaveformPlayer.jsx
+      - frontend/src/components/MetricsCard.jsx
+      - frontend/src/components/Toolbar.jsx
+
 # Tổng hợp Tiến độ Sprints
 sprint_summary:
-  total_epics: 4
-  total_stories: 24
-  total_story_points: 58
+  total_epics: 5
+  total_stories: 30
+  total_story_points: 81
   epics_in_progress: 0
-  epics_done: 4
+  epics_done: 5
   stories_ready_for_dev: 0
   stories_in_progress: 0
-  stories_done: 24
-  completion_percentage: 100
+  stories_done: 30
+  completion_percentage: 100.0

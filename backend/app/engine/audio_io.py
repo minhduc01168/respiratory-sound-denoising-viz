@@ -21,6 +21,12 @@ def load_and_resample_audio(
     Returns:
         Tuple of (audio_array: np.ndarray 1D float32, sr: int)
     """
+    if isinstance(source, np.ndarray):
+        arr = source.astype(np.float32)
+        if arr.ndim > 1:
+            arr = np.mean(arr, axis=1)
+        return arr, target_sr
+
     if isinstance(source, bytes):
         source = io.BytesIO(source)
 
