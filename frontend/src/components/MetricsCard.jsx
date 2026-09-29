@@ -36,7 +36,7 @@ export default function MetricsCard({ metrics, caseInfo }) {
               border: profile === 'speech' ? '1px solid rgba(56, 189, 248, 0.3)' : '1px solid rgba(16, 185, 129, 0.3)',
               fontWeight: 600
             }}>
-              {profile === 'speech' ? '🎙️ Profile Tiếng Nói' : '🫁 Profile Tiếng Thở Phổi'}
+              {profile === 'speech' || profile === 'diagnostic_speech' ? '🎙️ Tiếng Nói / Ho Chẩn Đoán' : '🫁 Âm Thở / Tiếng Phổi'}
             </span>
             <span style={{
               fontSize: '0.7rem',

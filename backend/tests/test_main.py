@@ -25,6 +25,11 @@ def test_healthcheck_endpoint():
     assert data["storage"]["cleaned"] is True
     assert data["storage"]["presets"] is True
 
+    # Test /health alias used by Docker healthcheck and Nginx
+    res2 = client.get("/health")
+    assert res2.status_code == 200
+    assert res2.json()["status"] == "healthy"
+
 
 def test_storage_directories_exist():
     assert settings.STORAGE_DIR.exists()

@@ -16,7 +16,7 @@ class Settings:
 
     # Audio upload constraints
     MAX_UPLOAD_SIZE_BYTES: int = 10 * 1024 * 1024  # 10 MB
-    ALLOWED_EXTENSIONS = {".wav", ".mp3"}
+    ALLOWED_EXTENSIONS = {".wav", ".mp3", ".ogg", ".flac", ".m4a", ".webm"}
     TARGET_SAMPLE_RATE: int = 16000
 
     # CORS configuration

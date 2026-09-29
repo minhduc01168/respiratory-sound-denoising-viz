@@ -37,6 +37,8 @@ def test_get_profile_config_fallbacks():
     """Verify case-insensitivity and default fallback mechanism."""
     assert get_profile_config("Speech").profile == AudioProfile.SPEECH
     assert get_profile_config("VOICE").profile == AudioProfile.SPEECH
+    assert get_profile_config("diagnostic_speech").profile == AudioProfile.SPEECH
+    assert get_profile_config("diagnostic").profile == AudioProfile.SPEECH
     assert get_profile_config("respiratory").profile == AudioProfile.RESPIRATORY
     assert get_profile_config("UNKNOWN_PROFILE_XYZ").profile == AudioProfile.RESPIRATORY
     assert get_profile_config(None).profile == AudioProfile.RESPIRATORY

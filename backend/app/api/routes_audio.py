@@ -199,13 +199,13 @@ async def list_available_algorithms():
         "profiles": [
             {
                 "id": "respiratory",
-                "name": "Âm Thanh Hô Hấp (Respiratory)",
-                "description": "Tối ưu hóa bảo tồn rale nổ (Crackles), rale rít (Wheezes), dải tần 50-2500Hz.",
+                "name": "Âm Thở / Tiếng Phổi (Respiratory)",
+                "description": "Tối ưu hóa âm thở phế nang, khí quản; bảo tồn rale nổ (Crackles), rale rít (Wheezes), dải tần 50-2500Hz.",
             },
             {
                 "id": "speech",
-                "name": "Tiếng Nói Lâm Sàng (Speech)",
-                "description": "Tối ưu hóa độ rõ nét âm vị và Formants tiếng nói, dải tần rộng 80-7500Hz.",
+                "name": "Tiếng Nói & Ho Chẩn Đoán (Diagnostic Speech)",
+                "description": "Tối ưu hóa nghiệm pháp phát âm (đếm số '99', âm 'Aaaa', tiếng ho theo y lệnh bác sĩ), bảo tồn Formants âm vị, dải tần rộng 80-7500Hz.",
             },
         ],
     }

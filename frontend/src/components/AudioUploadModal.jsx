@@ -45,12 +45,13 @@ export default function AudioUploadModal({
   const validateAndSetFile = (file) => {
     setErrorMsg('');
     const ext = file.name.split('.').pop().toLowerCase();
-    if (ext !== 'wav' && ext !== 'mp3') {
-      setErrorMsg('Chỉ hỗ trợ tệp định dạng .WAV hoặc .MP3.');
+    const validExts = ['wav', 'mp3', 'ogg', 'flac', 'm4a', 'webm'];
+    if (!validExts.includes(ext)) {
+      setErrorMsg('Định dạng tệp không được hỗ trợ. Chấp nhận: .WAV, .MP3, .OGG, .FLAC, .M4A, .WEBM.');
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      setErrorMsg('Dung lượng tệp vượt quá 10MB.');
+      setErrorMsg('Dung lượng tệp vượt quá giới hạn tối đa 10MB.');
       return;
     }
     setSelectedFile(file);
@@ -153,7 +154,7 @@ export default function AudioUploadModal({
           <input
             ref={inputRef}
             type="file"
-            accept=".wav,.mp3,audio/wav,audio/mpeg"
+            accept=".wav,.mp3,.ogg,.flac,.m4a,.webm,audio/*"
             onChange={handleChange}
             style={{ display: 'none' }}
           />
@@ -161,10 +162,10 @@ export default function AudioUploadModal({
             <FileAudio size={24} color="#38BDF8" />
           </div>
           <p style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--text-primary)' }}>
-            Kéo thả tệp âm thanh vào đây hoặc <span style={{ color: '#38BDF8', textDecoration: 'underline' }}>chọn từ máy tính</span>
+            Kéo thả tệp âm thanh vào đây hoặc <span style={{ color: '#38BDF8', textDecoration: 'underline' }}>chọn tệp từ thiết bị</span>
           </p>
           <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
-            Hỗ trợ WAV, MP3 &bull; Tối đa 10MB &bull; Khuyên dùng 15s - 30s
+            Hỗ trợ WAV, MP3, OGG, FLAC, M4A &bull; Tối đa 10MB &bull; Dành cho tiếng thở hoặc tiếng nói chẩn đoán
           </p>
         </div>
 

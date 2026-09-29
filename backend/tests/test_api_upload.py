@@ -51,3 +51,23 @@ def test_upload_empty_file():
         files={"file": ("empty.wav", buf, "audio/wav")},
     )
     assert response.status_code == 400
+
+
+def test_upload_valid_flac():
+    sr = 16000
+    audio = (0.3 * np.sin(np.linspace(0, 100, 2 * sr))).astype(np.float32)
+    buf = io.BytesIO()
+    sf.write(buf, audio, sr, format="FLAC")
+    buf.seek(0)
+
+    response = client.post(
+        "/api/audio/upload",
+        files={"file": ("cough_diagnostic.flac", buf, "audio/flac")},
+    )
+
+    assert response.status_code == 201
+    data = response.json()
+    assert "audio_id" in data
+    assert data["filename"] == "cough_diagnostic.flac"
+    assert data["sample_rate"] == 16000
+    assert abs(data["duration_sec"] - 2.0) < 0.1

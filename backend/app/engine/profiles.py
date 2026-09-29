@@ -44,7 +44,7 @@ RESPIRATORY_PROFILE = AudioProfileConfig(
     smooth_time_frames=2,
     smooth_freq_bins=2,
     preserve_transients=True,     # Protect explosive 5-20ms crackles from clipping
-    description="Tối ưu âm học hô hấp: Bảo tồn rale nổ (Crackles), rale rít (Wheezes), cắt tạp âm dải siêu cao.",
+    description="Tối ưu âm thở & tiếng phổi: Bảo tồn rale nổ (Crackles), rale rít (Wheezes), tiếng thở phế nang và khí quản, dải tần 50-2500Hz.",
 )
 
 SPEECH_PROFILE = AudioProfileConfig(
@@ -61,7 +61,7 @@ SPEECH_PROFILE = AudioProfileConfig(
     smooth_time_frames=2,
     smooth_freq_bins=3,
     preserve_transients=False,    # Smooth transients to reduce background clicks
-    description="Tối ưu tiếng nói lâm sàng: Bảo tồn dải tần rộng Formants, làm sạch sâu tiếng ồn buồng khám.",
+    description="Tối ưu tiếng nói & tiếng ho chẩn đoán: Phục vụ nghiệm pháp phát âm (đếm số '99', nguyên âm 'Aaaa', tiếng ho theo y lệnh bác sĩ), bảo tồn Formants âm vị, dải tần rộng 80-7500Hz.",
 )
 
 
@@ -74,7 +74,7 @@ def get_profile_config(profile: Union[str, AudioProfile] = AudioProfile.RESPIRAT
         target = profile
     elif isinstance(profile, str):
         val = profile.strip().lower()
-        if val in ("speech", "voice"):
+        if val in ("speech", "voice", "diagnostic_speech", "diagnostic", "vocal"):
             target = AudioProfile.SPEECH
         else:
             target = AudioProfile.RESPIRATORY

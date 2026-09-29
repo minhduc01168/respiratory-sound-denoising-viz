@@ -1,10 +1,10 @@
 @echo off
-title Respiratory Sound Denoising & Visualization System - One Click Launcher
+title Respiratory Sound Denoising and Visualization System - One Click Launcher
 color 0B
 
 echo ==============================================================================
-echo   RESPIRATORY SOUND DENOISING & VISUALIZATION PLATFORM
-echo   He Thong Khu Nhieu & Truc Quan Hoa Am Thanh Ho Hap Chuyen Dung Y Khoa
+echo   RESPIRATORY SOUND DENOISING AND VISUALIZATION PLATFORM
+echo   He Thong Khu Nhieu va Truc Quan Hoa Am Thanh Ho Hap Chuyen Dung Y Khoa
 echo ==============================================================================
 echo.
 
@@ -19,8 +19,8 @@ if %errorlevel% neq 0 (
 )
 python -c "import sys; print('    Found Python ' + sys.version.split()[0])"
 
-:: 2. Kiem tra Node.js & npm
-echo [*] Checking Node.js environment...
+:: 2. Kiem tra Node.js va npm
+echo [*] Checking Node.js and npm environment...
 node --version >nul 2>&1
 if %errorlevel% neq 0 (
     echo [!] ERROR: Node.js is not installed or not in system PATH!
@@ -33,7 +33,7 @@ echo     Found Node.js %NODE_VER%
 
 :: 3. Kiem tra va cai dat frontend dependencies neu can
 if not exist "frontend\node_modules\" (
-    echo [*] Initializing frontend dependencies (first time setup)...
+    echo [*] Initializing frontend dependencies - first time setup...
     cd frontend
     call npm install
     cd ..
@@ -49,11 +49,11 @@ echo.
 
 :: 4. Khoi dong Backend FastAPI trong cua so doc lap
 echo [*] Launching FastAPI Backend on http://127.0.0.1:8000 ...
-start "RSDV - FastAPI Backend (Port 8000)" cmd /k "title RSDV Backend && color 0A && python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload"
+start "RSDV Backend" cmd /k "title RSDV Backend && color 0A && python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload"
 
 :: 5. Khoi dong Frontend Vite trong cua so doc lap
 echo [*] Launching React Vite Frontend on http://localhost:5173 ...
-start "RSDV - React Frontend (Port 5173)" cmd /k "title RSDV Frontend && color 0E && cd frontend && npm run dev"
+start "RSDV Frontend" cmd /k "title RSDV Frontend && color 0E && cd frontend && npm run dev"
 
 :: 6. Cho doi server khoi dong va tu dong mo trinh duyet
 echo [*] Waiting for services to initialize...

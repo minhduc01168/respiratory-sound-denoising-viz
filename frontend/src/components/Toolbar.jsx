@@ -53,7 +53,7 @@ export default function Toolbar({
             }}
           >
             <Stethoscope size={14} />
-            <span>🫁 Tiếng Thở Phổi</span>
+            <span>🫁 Âm Thở / Tiếng Phổi</span>
           </button>
 
           <button
@@ -76,7 +76,7 @@ export default function Toolbar({
             }}
           >
             <Mic size={14} />
-            <span>🎙️ Tiếng Nói Hội Chẩn</span>
+            <span>🎙️ Tiếng Nói / Ho Chẩn Đoán</span>
           </button>
         </div>
       </div>
