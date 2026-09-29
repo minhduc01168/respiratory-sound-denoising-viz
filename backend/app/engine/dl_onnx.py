@@ -10,7 +10,6 @@ from .audio_io import normalize_audio
 from .profiles import AudioProfileConfig, get_profile_config
 from .spectral_gating import reduce_noise_spectral_gating
 from .vad import trim_silence
-from .export_onnx import export_dtln_model
 
 
 class DTLNOnnxEngine(BaseDenoisingEngine):
@@ -28,7 +27,14 @@ class DTLNOnnxEngine(BaseDenoisingEngine):
 
         self.model_path = Path(model_path)
         if not self.model_path.exists():
-            export_dtln_model(self.model_path)
+            try:
+                from .export_onnx import export_dtln_model
+                export_dtln_model(self.model_path)
+            except ImportError as err:
+                raise FileNotFoundError(
+                    f"Tập tin mô hình ONNX '{self.model_path}' không tồn tại và không thể tạo tự động "
+                    f"do môi trường chạy không có thư viện PyTorch ({err})."
+                ) from err
 
         # Configure ONNX Runtime for multi-threaded, low-latency CPU inference
         opts = ort.SessionOptions()

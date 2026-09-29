@@ -33,14 +33,34 @@ def load_and_resample_audio(
     try:
         data, orig_sr = sf.read(source, dtype="float32", always_2d=True)
     except Exception as sf_err:
+        decoded = False
         try:
             import torchaudio
             if isinstance(source, io.BytesIO):
                 source.seek(0)
             tensor, orig_sr = torchaudio.load(source)
             data = tensor.numpy().T.astype(np.float32)
-        except Exception as e:
-            raise ValueError(f"Không thể giải mã dữ liệu âm thanh: {sf_err}; fallback error: {e}")
+            decoded = True
+        except Exception:
+            pass
+
+        if not decoded:
+            try:
+                import subprocess
+                input_bytes = None
+                if isinstance(source, (str, bytes)):
+                    cmd = ["ffmpeg", "-i", str(source), "-f", "wav", "-ar", str(target_sr), "-ac", "1", "pipe:1"]
+                elif isinstance(source, io.BytesIO):
+                    source.seek(0)
+                    input_bytes = source.read()
+                    cmd = ["ffmpeg", "-i", "pipe:0", "-f", "wav", "-ar", str(target_sr), "-ac", "1", "pipe:1"]
+                proc = subprocess.run(cmd, input=input_bytes, capture_output=True, check=True)
+                data, orig_sr = sf.read(io.BytesIO(proc.stdout), dtype="float32", always_2d=True)
+                decoded = True
+            except Exception as ffmpeg_err:
+                raise ValueError(
+                    f"Không thể giải mã dữ liệu âm thanh: {sf_err}; fallback error: {ffmpeg_err}"
+                )
 
     # Convert to mono by averaging channels if multiple channels exist
     if data.shape[1] > 1:
