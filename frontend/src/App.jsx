@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
-import PresetSelector from './components/PresetSelector';
-import Toolbar from './components/Toolbar';
 import MetricsCard from './components/MetricsCard';
 import DualWaveformPlayer from './components/DualWaveformPlayer';
 import MelSpectrogramViewer from './components/MelSpectrogramViewer';
@@ -14,19 +12,38 @@ export default function App() {
   const [presets, setPresets] = useState([]);
   const [activeCase, setActiveCase] = useState(null);
   const [metrics, setMetrics] = useState(null);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [activeAudioType, setActiveAudioType] = useState('cleaned'); // 'cleaned' | 'raw'
   const [currentTime, setCurrentTime] = useState(0);
   const [selectedRegion, setSelectedRegion] = useState(null);
+  const [annotationCount, setAnnotationCount] = useState(0);
 
-  // Epic 5 Dual Profile & Multi-Engine Strategy state
+  // Clinical Profile ('respiratory' vs 'speech')
   const [activeProfile, setActiveProfile] = useState('respiratory');
-  const [activeAlgorithm, setActiveAlgorithm] = useState('classical_dsp');
 
-  // Modal states
+  // Drawer & Modal states
+  const [isAnnotationsOpen, setIsAnnotationsOpen] = useState(false);
   const [isRecordModalOpen, setIsRecordModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+
+  // Automatically map algorithm to medical profile
+  const getOptimalAlgorithm = (profile) => {
+    return profile === 'speech' ? 'dtln_ai' : 'classical_dsp';
+  };
+
+  const handleSelectPreset = useCallback((preset, profile = activeProfile) => {
+    setActiveCase(preset);
+    setSelectedRegion(null);
+    const algo = getOptimalAlgorithm(profile);
+    fetch(`/api/audio/process/${preset.id}?profile=${profile}&algorithm=${algo}`, { method: 'POST' })
+      .then((res) => res.json())
+      .then((result) => {
+        setMetrics(result.metrics);
+      })
+      .catch((err) => {
+        console.error('Process preset error:', err);
+      });
+  }, [activeProfile]);
 
   // Load presets on startup
   useEffect(() => {
@@ -35,38 +52,16 @@ export default function App() {
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           setPresets(data);
-          handleSelectPreset(data[1] || data[0]); // Select Wheeze case by default
+          handleSelectPreset(data[1] || data[0]); // Default to sample Wheeze case
         }
       })
       .catch((err) => console.error('Presets init failed:', err));
-  }, []);
-
-  const handleSelectPreset = (preset, profile = activeProfile, algo = activeAlgorithm) => {
-    setActiveCase(preset);
-    setIsProcessing(true);
-    setSelectedRegion(null);
-    fetch(`/api/audio/process/${preset.id}?profile=${profile}&algorithm=${algo}`, { method: 'POST' })
-      .then((res) => res.json())
-      .then((result) => {
-        setMetrics(result.metrics);
-        setIsProcessing(false);
-      })
-      .catch(() => {
-        setIsProcessing(false);
-      });
-  };
+  }, [handleSelectPreset]);
 
   const handleProfileChange = (newProfile) => {
     setActiveProfile(newProfile);
     if (activeCase) {
-      handleSelectPreset(activeCase, newProfile, activeAlgorithm);
-    }
-  };
-
-  const handleAlgorithmChange = (newAlgo) => {
-    setActiveAlgorithm(newAlgo);
-    if (activeCase) {
-      handleSelectPreset(activeCase, activeProfile, newAlgo);
+      handleSelectPreset(activeCase, newProfile);
     }
   };
 
@@ -76,10 +71,18 @@ export default function App() {
     setSelectedRegion(null);
   };
 
+  const handleRegionSelected = (region) => {
+    setSelectedRegion(region);
+    setIsAnnotationsOpen(true);
+  };
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      {/* 1. Header with Brand, Quick Actions, and Health Status */}
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--bg-app)' }}>
+      {/* 1. Clinical Minimalist Header (Logo removed, mode toggle & sample menu integrated) */}
       <Header
+        activeProfile={activeProfile}
+        onProfileChange={handleProfileChange}
+        presets={presets}
         activeCase={activeCase}
         onSelectPreset={handleSelectPreset}
         onOpenUploadModal={() => setIsUploadModalOpen(true)}
@@ -87,70 +90,56 @@ export default function App() {
         onExportReport={() => setIsReportModalOpen(true)}
       />
 
-      {/* 2. Quick Clinical Preset Selector Bar */}
-      <PresetSelector
-        presets={presets}
-        activeCaseId={activeCase?.id}
-        onSelectPreset={handleSelectPreset}
-      />
-
-      {/* 2.5 Pluggable Acoustic Strategy Toolbar */}
-      <div style={{ padding: '0 1rem 1rem 1rem' }}>
-        <Toolbar
-          activeProfile={activeProfile}
-          onProfileChange={handleProfileChange}
-          activeAlgorithm={activeAlgorithm}
-          onAlgorithmChange={handleAlgorithmChange}
-          isProcessing={isProcessing}
-        />
-      </div>
-
-      {/* 3. Main Medical Studio Workspace */}
+      {/* 2. Main Full-Width Medical Studio (No 360px sidebar clutter) */}
       <main
         style={{
           flex: 1,
-          padding: '0 1rem 1.5rem 1rem',
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1fr) 360px',
+          padding: '0.5rem 1.25rem 2rem 1.25rem',
+          display: 'flex',
+          flexDirection: 'column',
           gap: '1rem',
-          alignItems: 'start',
+          maxWidth: '1600px',
+          margin: '0 auto',
+          width: '100%',
         }}
       >
-        {/* Left Column: Metrics & Acoustic Visualization */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {/* Diagnostic Metrics Bar */}
-          <MetricsCard metrics={metrics} caseInfo={activeCase} />
+        {/* Diagnostic Metrics Summary */}
+        <MetricsCard metrics={metrics} caseInfo={activeCase} />
 
-          {/* Dual Waveform Audio Player Panel */}
-          {activeCase && (
-            <DualWaveformPlayer
-              rawUrl={`/api/audio/stream/${activeCase.id}/raw`}
-              cleanedUrl={`/api/audio/stream/${activeCase.id}/cleaned`}
-              activeAudioType={activeAudioType}
-              setActiveAudioType={setActiveAudioType}
-              onTimeUpdate={(t) => setCurrentTime(t)}
-            />
-          )}
+        {/* Dual Waveform A-B Player */}
+        {activeCase && (
+          <DualWaveformPlayer
+            rawUrl={`/api/audio/stream/${activeCase.id}/raw`}
+            cleanedUrl={`/api/audio/stream/${activeCase.id}/cleaned`}
+            activeAudioType={activeAudioType}
+            setActiveAudioType={setActiveAudioType}
+            onTimeUpdate={(t) => setCurrentTime(t)}
+          />
+        )}
 
-          {/* Interactive Mel-Spectrogram Panel */}
-          {activeCase && (
-            <MelSpectrogramViewer
-              audioId={activeCase.id}
-              target={activeAudioType}
-              currentTime={currentTime}
-              duration={metrics?.cleaned_duration_sec || activeCase.duration_sec || 4.0}
-              onRegionSelected={(region) => setSelectedRegion(region)}
-            />
-          )}
-        </div>
-
-        {/* Right Column: Medical Region Annotation Sidebar */}
-        <AnnotationPanel
-          audioId={activeCase?.id}
-          selectedRegion={selectedRegion}
-          onClearRegion={() => setSelectedRegion(null)}
-        />
+        {/* Full-Width Mel-Spectrogram Visualizer */}
+        {activeCase && (
+          <MelSpectrogramViewer
+            audioId={activeCase.id}
+            target={activeAudioType}
+            currentTime={currentTime}
+            duration={metrics?.cleaned_duration_sec || activeCase.duration_sec || 4.0}
+            annotationCount={annotationCount}
+            onRegionSelected={handleRegionSelected}
+            onOpenAnnotations={() => setIsAnnotationsOpen(true)}
+          />
+        )}
       </main>
+
+      {/* Slide-over Clinical Annotation Drawer */}
+      <AnnotationPanel
+        isOpen={isAnnotationsOpen}
+        onClose={() => setIsAnnotationsOpen(false)}
+        audioId={activeCase?.id}
+        selectedRegion={selectedRegion}
+        onClearRegion={() => setSelectedRegion(null)}
+        onAnnotationsChanged={(count) => setAnnotationCount(count)}
+      />
 
       {/* Modals */}
       <AudioRecordModal
@@ -158,15 +147,17 @@ export default function App() {
         onClose={() => setIsRecordModalOpen(false)}
         onProcessed={handleAudioProcessed}
         activeProfile={activeProfile}
-        activeAlgorithm={activeAlgorithm}
+        activeAlgorithm={getOptimalAlgorithm(activeProfile)}
       />
 
       <AudioUploadModal
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
         onProcessed={handleAudioProcessed}
+        presets={presets}
+        onSelectPreset={handleSelectPreset}
         activeProfile={activeProfile}
-        activeAlgorithm={activeAlgorithm}
+        activeAlgorithm={getOptimalAlgorithm(activeProfile)}
       />
 
       <ReportModal

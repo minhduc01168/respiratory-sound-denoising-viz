@@ -1,5 +1,4 @@
-import React from 'react';
-import { Activity, Wind, AlertCircle, Volume2, Sparkles } from 'lucide-react';
+import { Activity, Wind, AlertCircle, Volume2 } from 'lucide-react';
 
 export default function PresetSelector({ presets = [], activeCaseId, onSelectPreset }) {
   if (!presets || presets.length === 0) return null;

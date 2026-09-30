@@ -1,10 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { UploadCloud, X, FileAudio, Check, AlertCircle, Loader2 } from 'lucide-react';
+import { UploadCloud, X, FileAudio, AlertCircle, Loader2, Sparkles } from 'lucide-react';
 
 export default function AudioUploadModal({
   isOpen,
   onClose,
   onProcessed,
+  presets = [],
+  onSelectPreset,
   activeProfile = 'respiratory',
   activeAlgorithm = 'classical_dsp',
 }) {
@@ -111,24 +113,77 @@ export default function AudioUploadModal({
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0, left: 0, right: 0, bottom: 0,
-      background: 'rgba(0,0,0,0.75)',
-      backdropFilter: 'blur(8px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000,
-      padding: '1rem'
-    }}>
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '480px', padding: '1.5rem', background: 'var(--bg-darker)', border: '1px solid var(--border-glow)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <UploadCloud size={20} color="#38BDF8" />
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>Tải Tệp Âm Thanh Hô Hấp</h3>
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'rgba(15, 23, 42, 0.45)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1000,
+        padding: '1rem',
+      }}
+    >
+      <div
+        className="clinical-card"
+        style={{
+          width: '100%',
+          maxWidth: '520px',
+          padding: '1.75rem',
+          background: '#FFFFFF',
+          border: '1px solid var(--border-subtle)',
+          boxShadow: 'var(--shadow-drawer)',
+        }}
+      >
+        {/* Header */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '1.25rem',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <div
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '8px',
+                background: 'var(--primary-light)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <UploadCloud size={20} color="var(--primary)" />
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                Tải Tệp Âm Thanh Bệnh Nhân
+              </h3>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                Chấp nhận file ghi âm .WAV, .MP3, .FLAC (Tối đa 10MB)
+              </p>
+            </div>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              padding: '0.35rem',
+            }}
+          >
             <X size={20} />
           </button>
         </div>
@@ -141,79 +196,140 @@ export default function AudioUploadModal({
           onDrop={handleDrop}
           onClick={() => inputRef.current?.click()}
           style={{
-            border: `2px dashed ${dragActive ? '#06B6D4' : 'var(--border-subtle)'}`,
+            border: `2px dashed ${dragActive ? 'var(--primary)' : 'var(--border-subtle)'}`,
             borderRadius: 'var(--radius-md)',
             padding: '2rem 1rem',
             textAlign: 'center',
             cursor: 'pointer',
-            background: dragActive ? 'rgba(6, 182, 212, 0.05)' : 'rgba(0,0,0,0.2)',
-            transition: 'all 0.2s ease',
-            marginBottom: '1rem'
+            background: dragActive ? 'var(--primary-light)' : 'var(--bg-subtle)',
+            transition: 'all 0.15s ease',
+            marginBottom: '1.25rem',
           }}
         >
           <input
             ref={inputRef}
             type="file"
-            accept=".wav,.mp3,.ogg,.flac,.m4a,.webm,audio/*"
+            accept=".wav,.mp3,.ogg,.flac,.m4a,.webm"
             onChange={handleChange}
             style={{ display: 'none' }}
           />
-          <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(56, 189, 248, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.75rem' }}>
-            <FileAudio size={24} color="#38BDF8" />
-          </div>
-          <p style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--text-primary)' }}>
-            Kéo thả tệp âm thanh vào đây hoặc <span style={{ color: '#38BDF8', textDecoration: 'underline' }}>chọn tệp từ thiết bị</span>
-          </p>
-          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
-            Hỗ trợ WAV, MP3, OGG, FLAC, M4A &bull; Tối đa 10MB &bull; Dành cho tiếng thở hoặc tiếng nói chẩn đoán
-          </p>
+
+          <FileAudio
+            size={38}
+            color={dragActive ? 'var(--primary)' : 'var(--text-muted)'}
+            style={{ margin: '0 auto 0.75rem auto' }}
+          />
+
+          {selectedFile ? (
+            <div>
+              <p style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                {selectedFile.name}
+              </p>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
+                {(selectedFile.size / 1024 / 1024).toFixed(2)} MB &bull; Sẵn sàng phân tích
+              </p>
+            </div>
+          ) : (
+            <div>
+              <p style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                Kéo thả tệp âm thanh vào đây, hoặc <span style={{ color: 'var(--primary)' }}>chọn từ máy tính</span>
+              </p>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
+                Khuyến nghị: File WAV 16-bit 44.1kHz hoặc 16kHz
+              </p>
+            </div>
+          )}
         </div>
 
-        {/* Selected file preview */}
-        {selectedFile && (
-          <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 'var(--radius-md)', padding: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', border: '1px solid var(--border-subtle)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <FileAudio size={18} color="#10B981" />
-              <div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-primary)' }}>{selectedFile.name}</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{(selectedFile.size / (1024 * 1024)).toFixed(2)} MB</div>
-              </div>
-            </div>
-            <button onClick={(e) => { e.stopPropagation(); setSelectedFile(null); }} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
-              <X size={16} />
-            </button>
-          </div>
-        )}
-
         {errorMsg && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#FB7185', fontSize: '0.8rem', marginBottom: '1rem' }}>
-            <AlertCircle size={16} />
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              color: 'var(--rose-danger)',
+              fontSize: '0.8rem',
+              marginBottom: '1rem',
+              background: '#FFF1F2',
+              padding: '0.5rem 0.75rem',
+              borderRadius: 'var(--radius-sm)',
+            }}
+          >
+            <AlertCircle size={15} />
             <span>{errorMsg}</span>
           </div>
         )}
 
-        <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
-          <button className="btn btn-secondary" onClick={onClose} disabled={isSubmitting}>
+        {/* Action Buttons */}
+        <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', marginBottom: '1.25rem' }}>
+          <button type="button" className="btn btn-secondary" onClick={onClose} disabled={isSubmitting}>
             Hủy
           </button>
           <button
+            type="button"
             className="btn btn-primary"
             onClick={handleUploadAndProcess}
             disabled={!selectedFile || isSubmitting}
           >
             {isSubmitting ? (
               <>
-                <Loader2 size={16} className="animate-spin" />
-                <span>Đang xử lý DSP...</span>
+                <Loader2 size={15} className="animate-spin" />
+                <span>Đang xử lý AI...</span>
               </>
             ) : (
               <>
-                <UploadCloud size={16} />
-                <span>Tải lên & Khử nhiễu</span>
+                <Sparkles size={15} />
+                <span>Tải Lên & Khử Nhiễu Ngay</span>
               </>
             )}
           </button>
         </div>
+
+        {/* Reference / Sample Cases Picker */}
+        {presets && presets.length > 0 && (
+          <div
+            style={{
+              borderTop: '1px solid var(--border-subtle)',
+              paddingTop: '1rem',
+            }}
+          >
+            <div
+              style={{
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                color: 'var(--text-secondary)',
+                marginBottom: '0.5rem',
+              }}
+            >
+              Hoặc nghe thử mẫu nghiên cứu lâm sàng:
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+              {presets.map((p) => (
+                <button
+                  type="button"
+                  key={p.id}
+                  onClick={() => {
+                    if (onSelectPreset) onSelectPreset(p);
+                    onClose();
+                  }}
+                  style={{
+                    background: 'var(--bg-subtle)',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: 'var(--radius-sm)',
+                    padding: '0.35rem 0.65rem',
+                    fontSize: '0.75rem',
+                    cursor: 'pointer',
+                    color: 'var(--text-secondary)',
+                    fontWeight: 500,
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  [{p.tag}] {p.title}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

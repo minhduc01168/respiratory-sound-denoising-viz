@@ -1,5 +1,4 @@
-import React from 'react';
-import { Stethoscope, Mic, Cpu, Sparkles, RefreshCw } from 'lucide-react';
+import { Stethoscope, Mic, Cpu, RefreshCw } from 'lucide-react';
 
 export default function Toolbar({
   activeProfile,
