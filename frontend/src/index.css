@@ -277,14 +277,33 @@ code, pre, .font-mono {
 
 /* Medical Report Print Media Styles */
 @media print {
+  @page {
+    size: A4;
+    margin: 12mm 15mm;
+  }
+
   body {
     background: #FFFFFF !important;
     color: #000000 !important;
-    font-size: 12pt;
+    font-size: 11pt;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  header, main, .no-print, .modal-backdrop, .drawer-backdrop, .drawer-panel {
+  /* Hide regular app elements and interactive controls during print */
+  header, main, .no-print, .drawer-backdrop, .drawer-panel {
     display: none !important;
+  }
+
+  /* Make backdrop transparent and static so only the report document is printed */
+  .modal-backdrop {
+    position: static !important;
+    background: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+    display: block !important;
+    z-index: auto !important;
   }
 
   .printable-report {
@@ -292,6 +311,8 @@ code, pre, .font-mono {
     max-width: 100% !important;
     width: 100% !important;
     max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
     background: #FFFFFF !important;
     color: #0F172A !important;
     border: none !important;
@@ -299,7 +320,25 @@ code, pre, .font-mono {
     padding: 0 !important;
   }
 
+  .printable-report > div:last-child,
+  .printable-content {
+    overflow-y: visible !important;
+    max-height: none !important;
+    height: auto !important;
+    padding: 0.5rem 0 !important;
+  }
+
   .printable-report table {
     color: #0F172A !important;
+    page-break-inside: avoid;
+  }
+
+  .printable-report textarea {
+    border: 1px solid #CBD5E1 !important;
+    color: #0F172A !important;
+    background: #F8FAFC !important;
+    box-shadow: none !important;
+    resize: none !important;
   }
 }
+

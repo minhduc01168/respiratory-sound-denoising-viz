@@ -107,8 +107,8 @@ export default function MetricsCard({ metrics, caseInfo }) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '1rem',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          gap: '1.5rem',
         }}
       >
         {/* Card 1: Noise Reduction & Audio Clarity */}
@@ -117,7 +117,7 @@ export default function MetricsCard({ metrics, caseInfo }) {
             background: 'linear-gradient(180deg, #F0FDF4 0%, #FFFFFF 100%)',
             border: '1px solid #BBF7D0',
             borderRadius: 'var(--radius-md)',
-            padding: '1rem 1.15rem',
+            padding: '1.15rem 1.35rem',
           }}
         >
           <div
@@ -167,7 +167,7 @@ export default function MetricsCard({ metrics, caseInfo }) {
                 : 'linear-gradient(180deg, #FFF1F2 0%, #FFFFFF 100%)',
             border: profile === 'speech' ? '1px solid #BAE6FD' : '1px solid #FECDD3',
             borderRadius: 'var(--radius-md)',
-            padding: '1rem 1.15rem',
+            padding: '1.15rem 1.35rem',
           }}
         >
           {profile === 'speech' ? (
@@ -263,7 +263,7 @@ export default function MetricsCard({ metrics, caseInfo }) {
             background: 'linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)',
             border: '1px solid var(--border-subtle)',
             borderRadius: 'var(--radius-md)',
-            padding: '1rem 1.15rem',
+            padding: '1.15rem 1.35rem',
           }}
         >
           <div

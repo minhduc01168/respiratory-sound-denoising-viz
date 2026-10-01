@@ -55,7 +55,7 @@ export default function ReportModal({ isOpen, onClose, activeCase, metrics }) {
         className="clinical-card printable-report"
         style={{
           width: '100%',
-          maxWidth: '820px',
+          maxWidth: '880px',
           maxHeight: '92vh',
           background: '#FFFFFF',
           border: '1px solid var(--border-subtle)',
@@ -112,6 +112,7 @@ export default function ReportModal({ isOpen, onClose, activeCase, metrics }) {
 
         {/* Printable Report Content */}
         <div
+          className="printable-content"
           style={{
             padding: '2rem 2.5rem',
             overflowY: 'auto',
@@ -177,7 +178,7 @@ export default function ReportModal({ isOpen, onClose, activeCase, metrics }) {
           <div
             style={{
               background: 'var(--bg-subtle)',
-              padding: '1rem 1.25rem',
+              padding: '1.25rem 1.5rem',
               borderRadius: 'var(--radius-md)',
               border: '1px solid var(--border-subtle)',
             }}
@@ -187,8 +188,9 @@ export default function ReportModal({ isOpen, onClose, activeCase, metrics }) {
                 fontSize: '0.85rem',
                 fontWeight: 700,
                 color: 'var(--primary)',
-                marginBottom: '0.65rem',
+                marginBottom: '0.85rem',
                 textTransform: 'uppercase',
+                letterSpacing: '0.03em',
               }}
             >
               1. Thông Tin Bản Ghi Âm Học
@@ -197,8 +199,9 @@ export default function ReportModal({ isOpen, onClose, activeCase, metrics }) {
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: '0.75rem',
-                fontSize: '0.8rem',
+                columnGap: '2.25rem',
+                rowGap: '1rem',
+                fontSize: '0.825rem',
               }}
             >
               <div>
@@ -229,7 +232,7 @@ export default function ReportModal({ isOpen, onClose, activeCase, metrics }) {
           <div
             style={{
               background: 'var(--bg-subtle)',
-              padding: '1rem 1.25rem',
+              padding: '1.25rem 1.5rem',
               borderRadius: 'var(--radius-md)',
               border: '1px solid var(--border-subtle)',
             }}
@@ -239,69 +242,70 @@ export default function ReportModal({ isOpen, onClose, activeCase, metrics }) {
                 fontSize: '0.85rem',
                 fontWeight: 700,
                 color: '#0F766E',
-                marginBottom: '0.65rem',
+                marginBottom: '0.85rem',
                 textTransform: 'uppercase',
+                letterSpacing: '0.03em',
               }}
             >
               2. Đánh Giá Hiệu Suất Lọc Âm Thanh
             </h4>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem', textAlign: 'left' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.825rem', textAlign: 'left' }}>
               <thead>
-                <tr style={{ borderBottom: '1.5px solid var(--border-subtle)', color: 'var(--text-secondary)' }}>
-                  <th style={{ padding: '0.5rem 0' }}>Chỉ số đo lường</th>
-                  <th>Trước lọc</th>
-                  <th>Sau lọc</th>
-                  <th>Cải thiện</th>
-                  <th>Ý nghĩa lâm sàng</th>
+                <tr style={{ borderBottom: '1.5px solid #CBD5E1', color: 'var(--text-secondary)' }}>
+                  <th style={{ padding: '0.75rem 1.25rem 0.75rem 0.5rem', fontWeight: 600 }}>Chỉ số đo lường</th>
+                  <th style={{ padding: '0.75rem 1.5rem', fontWeight: 600 }}>Trước lọc</th>
+                  <th style={{ padding: '0.75rem 1.5rem', fontWeight: 600 }}>Sau lọc</th>
+                  <th style={{ padding: '0.75rem 1.5rem', fontWeight: 600 }}>Cải thiện</th>
+                  <th style={{ padding: '0.75rem 0.5rem 0.75rem 1.5rem', fontWeight: 600 }}>Ý nghĩa lâm sàng</th>
                 </tr>
               </thead>
               <tbody>
                 <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                  <td style={{ padding: '0.5rem 0', fontWeight: 600 }}>Tỷ lệ tín hiệu trên nhiễu (SNR)</td>
-                  <td>{metrics?.snr_original ?? 4.2} dB</td>
-                  <td>{metrics?.snr_processed ?? 12.7} dB</td>
-                  <td style={{ color: '#16A34A', fontWeight: 800 }}>+{metrics?.snr_delta ?? 8.5} dB</td>
-                  <td>Triệt tiêu 95% tạp âm nền phòng khám và tiếng ù</td>
+                  <td style={{ padding: '0.75rem 1.25rem 0.75rem 0.5rem', fontWeight: 600 }}>Tỷ lệ tín hiệu trên nhiễu (SNR)</td>
+                  <td style={{ padding: '0.75rem 1.5rem' }}>{metrics?.snr_original ?? 4.2} dB</td>
+                  <td style={{ padding: '0.75rem 1.5rem' }}>{metrics?.snr_processed ?? 12.7} dB</td>
+                  <td style={{ padding: '0.75rem 1.5rem', color: '#16A34A', fontWeight: 800 }}>+{metrics?.snr_delta ?? 8.5} dB</td>
+                  <td style={{ padding: '0.75rem 0.5rem 0.75rem 1.5rem' }}>Triệt tiêu 95% tạp âm nền phòng khám và tiếng ù</td>
                 </tr>
                 <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                  <td style={{ padding: '0.5rem 0', fontWeight: 600 }}>Cắt khoảng lặng vô ích (VAD)</td>
-                  <td>-</td>
-                  <td>{metrics?.silence_trimmed_sec ?? 0.45}s</td>
-                  <td style={{ color: 'var(--primary)', fontWeight: 700 }}>Tối ưu 12%</td>
-                  <td>Chuẩn hóa vùng năng lượng chu kỳ thở</td>
+                  <td style={{ padding: '0.75rem 1.25rem 0.75rem 0.5rem', fontWeight: 600 }}>Cắt khoảng lặng vô ích (VAD)</td>
+                  <td style={{ padding: '0.75rem 1.5rem' }}>-</td>
+                  <td style={{ padding: '0.75rem 1.5rem' }}>{metrics?.silence_trimmed_sec ?? 0.45}s</td>
+                  <td style={{ padding: '0.75rem 1.5rem', color: 'var(--primary)', fontWeight: 700 }}>Tối ưu 12%</td>
+                  <td style={{ padding: '0.75rem 0.5rem 0.75rem 1.5rem' }}>Chuẩn hóa vùng năng lượng chu kỳ thở</td>
                 </tr>
                 {metrics?.profile === 'speech' ? (
                   <>
                     <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                      <td style={{ padding: '0.5rem 0', fontWeight: 600 }}>Chất lượng giọng nói PESQ</td>
-                      <td>-</td>
-                      <td>{metrics?.pesq_score ? metrics.pesq_score.toFixed(2) : '3.85'} / 5.0</td>
-                      <td style={{ color: 'var(--primary)', fontWeight: 800 }}>ITU-T P.862</td>
-                      <td>Âm sắc giọng nói tự nhiên, không bị méo tiếng</td>
+                      <td style={{ padding: '0.75rem 1.25rem 0.75rem 0.5rem', fontWeight: 600 }}>Chất lượng giọng nói PESQ</td>
+                      <td style={{ padding: '0.75rem 1.5rem' }}>-</td>
+                      <td style={{ padding: '0.75rem 1.5rem' }}>{metrics?.pesq_score ? metrics.pesq_score.toFixed(2) : '3.85'} / 5.0</td>
+                      <td style={{ padding: '0.75rem 1.5rem', color: 'var(--primary)', fontWeight: 800 }}>ITU-T P.862</td>
+                      <td style={{ padding: '0.75rem 0.5rem 0.75rem 1.5rem' }}>Âm sắc giọng nói tự nhiên, không bị méo tiếng</td>
                     </tr>
                     <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                      <td style={{ padding: '0.5rem 0', fontWeight: 600 }}>Độ hiểu lời nói STOI</td>
-                      <td>-</td>
-                      <td>{metrics?.stoi_intelligibility ? (metrics.stoi_intelligibility * 100).toFixed(1) : '94.2'}%</td>
-                      <td style={{ color: '#0F766E', fontWeight: 800 }}>Rất cao</td>
-                      <td>Bảo toàn trọn vẹn đặc tính âm học của tiếng ho</td>
+                      <td style={{ padding: '0.75rem 1.25rem 0.75rem 0.5rem', fontWeight: 600 }}>Độ hiểu lời nói STOI</td>
+                      <td style={{ padding: '0.75rem 1.5rem' }}>-</td>
+                      <td style={{ padding: '0.75rem 1.5rem' }}>{metrics?.stoi_intelligibility ? (metrics.stoi_intelligibility * 100).toFixed(1) : '94.2'}%</td>
+                      <td style={{ padding: '0.75rem 1.5rem', color: '#0F766E', fontWeight: 800 }}>Rất cao</td>
+                      <td style={{ padding: '0.75rem 0.5rem 0.75rem 1.5rem' }}>Bảo toàn trọn vẹn đặc tính âm học của tiếng ho</td>
                     </tr>
                   </>
                 ) : (
                   <>
                     <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                      <td style={{ padding: '0.5rem 0', fontWeight: 600 }}>Bảo tồn tiếng Ran nổ (CPR)</td>
-                      <td>-</td>
-                      <td>{metrics?.crackle_preservation_rate_pct ? metrics.crackle_preservation_rate_pct.toFixed(1) : '98.5'}%</td>
-                      <td style={{ color: '#0F766E', fontWeight: 800 }}>98.5%</td>
-                      <td>Giữ nguyên các vi xung nổ gián đoạn &lt;20ms</td>
+                      <td style={{ padding: '0.75rem 1.25rem 0.75rem 0.5rem', fontWeight: 600 }}>Bảo tồn tiếng Ran nổ (CPR)</td>
+                      <td style={{ padding: '0.75rem 1.5rem' }}>-</td>
+                      <td style={{ padding: '0.75rem 1.5rem' }}>{metrics?.crackle_preservation_rate_pct ? metrics.crackle_preservation_rate_pct.toFixed(1) : '98.5'}%</td>
+                      <td style={{ padding: '0.75rem 1.5rem', color: '#0F766E', fontWeight: 800 }}>98.5%</td>
+                      <td style={{ padding: '0.75rem 0.5rem 0.75rem 1.5rem' }}>Giữ nguyên các vi xung nổ gián đoạn &lt;20ms</td>
                     </tr>
                     <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                      <td style={{ padding: '0.5rem 0', fontWeight: 600 }}>Trung thực sóng hài Ran rít (WHF)</td>
-                      <td>-</td>
-                      <td>{metrics?.wheeze_harmonic_fidelity_pct ? metrics.wheeze_harmonic_fidelity_pct.toFixed(1) : '96.2'}%</td>
-                      <td style={{ color: '#0F766E', fontWeight: 800 }}>96.2%</td>
-                      <td>Bảo toàn dải tần số liên tục 400-1000Hz</td>
+                      <td style={{ padding: '0.75rem 1.25rem 0.75rem 0.5rem', fontWeight: 600 }}>Trung thực sóng hài Ran rít (WHF)</td>
+                      <td style={{ padding: '0.75rem 1.5rem' }}>-</td>
+                      <td style={{ padding: '0.75rem 1.5rem' }}>{metrics?.wheeze_harmonic_fidelity_pct ? metrics.wheeze_harmonic_fidelity_pct.toFixed(1) : '96.2'}%</td>
+                      <td style={{ padding: '0.75rem 1.5rem', color: '#0F766E', fontWeight: 800 }}>96.2%</td>
+                      <td style={{ padding: '0.75rem 0.5rem 0.75rem 1.5rem' }}>Bảo toàn dải tần số liên tục 400-1000Hz</td>
                     </tr>
                   </>
                 )}
@@ -313,7 +317,7 @@ export default function ReportModal({ isOpen, onClose, activeCase, metrics }) {
           <div
             style={{
               background: 'var(--bg-subtle)',
-              padding: '1rem 1.25rem',
+              padding: '1.25rem 1.5rem',
               borderRadius: 'var(--radius-md)',
               border: '1px solid var(--border-subtle)',
             }}
@@ -323,33 +327,34 @@ export default function ReportModal({ isOpen, onClose, activeCase, metrics }) {
                 fontSize: '0.85rem',
                 fontWeight: 700,
                 color: '#B45309',
-                marginBottom: '0.65rem',
+                marginBottom: '0.85rem',
                 textTransform: 'uppercase',
+                letterSpacing: '0.03em',
               }}
             >
               3. Dấu Hiệu Bệnh Học Đã Ghi Nhận ({annotations.length} mốc)
             </h4>
             {annotations.length === 0 ? (
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
                 Không ghi nhận mốc âm bệnh học bất thường nào trên bản ghi này.
               </p>
             ) : (
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem', textAlign: 'left' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.825rem', textAlign: 'left' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' }}>
-                    <th style={{ padding: '0.4rem 0' }}>Khoảng thời gian</th>
-                    <th>Phân loại</th>
-                    <th>Mô tả chi tiết</th>
-                    <th>Bác sĩ đánh giá</th>
+                  <tr style={{ borderBottom: '1.5px solid #CBD5E1', color: 'var(--text-secondary)' }}>
+                    <th style={{ padding: '0.75rem 1.5rem 0.75rem 0.5rem', fontWeight: 600 }}>Khoảng thời gian</th>
+                    <th style={{ padding: '0.75rem 1.5rem', fontWeight: 600 }}>Phân loại</th>
+                    <th style={{ padding: '0.75rem 1.5rem', fontWeight: 600 }}>Mô tả chi tiết</th>
+                    <th style={{ padding: '0.75rem 0.5rem 0.75rem 1.5rem', fontWeight: 600 }}>Bác sĩ đánh giá</th>
                   </tr>
                 </thead>
                 <tbody>
                   {annotations.map((ann) => (
                     <tr key={ann.id} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                      <td style={{ padding: '0.45rem 0', fontFamily: 'var(--font-mono)', color: 'var(--primary)', fontWeight: 600 }}>
+                      <td style={{ padding: '0.75rem 1.5rem 0.75rem 0.5rem', fontFamily: 'var(--font-mono)', color: 'var(--primary)', fontWeight: 600 }}>
                         {ann.start_time.toFixed(2)}s &rarr; {ann.end_time.toFixed(2)}s
                       </td>
-                      <td>
+                      <td style={{ padding: '0.75rem 1.5rem' }}>
                         <span
                           className={`badge ${
                             ann.tag === 'Wheeze'
@@ -358,13 +363,13 @@ export default function ReportModal({ isOpen, onClose, activeCase, metrics }) {
                               ? 'badge-rose'
                               : 'badge-cyan'
                           }`}
-                          style={{ fontSize: '0.7rem' }}
+                          style={{ fontSize: '0.75rem', padding: '0.25rem 0.65rem' }}
                         >
                           {ann.tag}
                         </span>
                       </td>
-                      <td>{ann.clinical_note || 'Không có mô tả thêm'}</td>
-                      <td>{ann.doctor_name || 'BS. Chuyên Khoa'}</td>
+                      <td style={{ padding: '0.75rem 1.5rem' }}>{ann.clinical_note || 'Không có mô tả thêm'}</td>
+                      <td style={{ padding: '0.75rem 0.5rem 0.75rem 1.5rem' }}>{ann.doctor_name || 'BS. Chuyên Khoa'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -373,7 +378,7 @@ export default function ReportModal({ isOpen, onClose, activeCase, metrics }) {
           </div>
 
           {/* 4. Doctor Conclusion & Signature */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '2rem', marginTop: '0.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '3rem', marginTop: '0.75rem' }}>
             <div>
               <h4
                 style={{
