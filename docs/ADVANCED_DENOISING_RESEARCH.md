@@ -110,10 +110,13 @@ $$Y(k, m) = S(k, m) + D(k, m)$$
 *(với $k$ là chỉ số tần số, $m$ là chỉ số khung thời gian).*
 
 Mật độ phổ công suất (PSD) được ước lượng:
+
 $$P_y(k, m) = |Y(k, m)|^2$$
 
 Ước lượng tạp âm nền $\hat{P}_d(k)$ từ các khung thời gian có mức năng lượng thấp nhất. Mặt nạ khuếch đại (Gain Mask) dạng Wiener được tính:
+
 $$G(k, m) = \frac{P_y(k, m)}{P_y(k, m) + \alpha \hat{P}_d(k)}$$
+
 $$S_{\text{clean}}(k, m) = Y(k, m) \cdot \max(G(k, m), \beta)$$
 *(với $\alpha$ là hệ số trừ thừa - oversubtraction factor, $\beta$ là ngưỡng sàn phổ - spectral floor).*
 

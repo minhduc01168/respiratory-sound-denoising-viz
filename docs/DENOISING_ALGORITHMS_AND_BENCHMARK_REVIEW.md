@@ -116,10 +116,14 @@ Triển khai tại [backend/app/engine/profiles.py](file:///d:/Slide_THPT/PhanDa
 
 #### 3.1. Bản chất toán học của Spectral Subtraction & Wiener Filter
 Hệ thống trừ phổ giả định tín hiệu quan sát:
+
 $$y(t) = s(t) + d(t) \quad \xrightarrow{\text{STFT}} \quad Y(k, m) = S(k, m) + D(k, m)$$
+
 Hàm truyền Wiener cực tiểu hóa sai số bình phương trung bình:
-$$G(k, m) = \max\left( \frac{P_y(k, m)}{P_y(k, m) + \alpha \hat{P}_d(k)}, \, \beta \right)$$
-$$S_{\text{clean}}(k, m) = G(k, m) \cdot |Y(k, m)| \cdot e^{j \angle Y(k, m)}$$
+
+$$G(k, m) = \max\left( \frac{P_y(k, m)}{P_y(k, m) + \alpha \hat{P}_d(k)}, \; \beta \right)$$
+
+$$S_{\text{clean}}(k, m) = G(k, m) \cdot Y(k, m) = G(k, m) \cdot |Y(k, m)| \, e^{j \angle Y(k, m)}$$
 
 #### 3.2. Bốn chế độ thất bại cốt lõi (Failure Modes)
 1. **Musical Noise (Nhiễu âm nhạc kim loại):**
