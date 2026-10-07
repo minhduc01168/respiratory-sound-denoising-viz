@@ -43,10 +43,10 @@ Write-Host "====================================================================
 Write-Host ""
 
 # 4. Khoi dong Backend FastAPI trong cua so doc lap
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "`$Host.UI.RawUI.WindowTitle = 'RSDV Backend'; python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload"
+Start-Process powershell -WorkingDirectory $PSScriptRoot -ArgumentList "-NoExit", "-Command", "`$Host.UI.RawUI.WindowTitle = 'RSDV Backend'; python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload"
 
 # 5. Khoi dong Frontend Vite trong cua so doc lap
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "`$Host.UI.RawUI.WindowTitle = 'RSDV Frontend'; cd frontend; npm run dev"
+Start-Process powershell -WorkingDirectory $PSScriptRoot -ArgumentList "-NoExit", "-Command", "`$Host.UI.RawUI.WindowTitle = 'RSDV Frontend'; cd frontend; npm run dev"
 
 # 6. Cho 4 giay va tu dong mo trinh duyet
 Start-Sleep -Seconds 4
