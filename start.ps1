@@ -37,20 +37,20 @@ if (-not (Test-Path "frontend/node_modules")) {
 Write-Host ""
 Write-Host "==============================================================================" -ForegroundColor Cyan
 Write-Host "  STARTING SYSTEM SERVICES..." -ForegroundColor Cyan
-Write-Host "  - Backend API:  http://127.0.0.1:8000 (FastAPI + ONNX AI Engine)" -ForegroundColor White
-Write-Host "  - Frontend App: http://localhost:5173 (React Vite Dashboard)" -ForegroundColor White
+Write-Host "  - Backend API:  http://127.0.0.1:8000 (FastAPI + DSP Engine)" -ForegroundColor White
+Write-Host "  - Frontend App: http://localhost:3000 (React Vite Dashboard)" -ForegroundColor White
 Write-Host "==============================================================================" -ForegroundColor Cyan
 Write-Host ""
 
 # 4. Khoi dong Backend FastAPI trong cua so doc lap
-Start-Process powershell -WorkingDirectory $PSScriptRoot -ArgumentList "-NoExit", "-Command", "`$Host.UI.RawUI.WindowTitle = 'RSDV Backend'; python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload"
+Start-Process powershell -WorkingDirectory $PSScriptRoot -ArgumentList "-NoExit", "-Command", "`$Host.UI.RawUI.WindowTitle = 'RSDV Backend'; python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload"
 
 # 5. Khoi dong Frontend Vite trong cua so doc lap
 Start-Process powershell -WorkingDirectory $PSScriptRoot -ArgumentList "-NoExit", "-Command", "`$Host.UI.RawUI.WindowTitle = 'RSDV Frontend'; cd frontend; npm run dev"
 
 # 6. Cho 4 giay va tu dong mo trinh duyet
 Start-Sleep -Seconds 4
-Start-Process "http://localhost:5173"
+Start-Process "http://localhost:3000"
 
-Write-Host "[*] System started! Doctor dashboard opening at http://localhost:5173" -ForegroundColor Green
+Write-Host "[*] System started! Doctor dashboard opening at http://localhost:3000" -ForegroundColor Green
 Write-Host "    To stop the services, simply close the two popup PowerShell windows." -ForegroundColor Gray

@@ -78,6 +78,21 @@ export default function AudioRecordModal({
     audioChunksRef.current = [];
 
     try {
+      // Check for browser Secure Context requirement (HTTP vs HTTPS / localhost)
+      if (typeof window !== 'undefined' && window.isSecureContext === false && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        setErrorMsg(
+          'Trình duyệt bảo mật chặn Microphone khi truy cập qua IP Server (HTTP). Để bật trên Chrome/Edge: mở chrome://flags/#unsafely-treat-insecure-origin-as-secure -> dán URL http://' + window.location.host + ' -> chọn Enabled -> Relaunch trình duyệt.'
+        );
+        return;
+      }
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setErrorMsg(
+          'Trình duyệt của bạn đang chặn API Microphone trên giao thức HTTP này. Vui lòng mở quyền mic trong cài đặt trình duyệt hoặc truy cập qua localhost.'
+        );
+        return;
+      }
+
       // STRICT MEDICAL REQUIREMENT: Disable browser hardware DSP filters to preserve raw pathology
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
@@ -133,7 +148,13 @@ export default function AudioRecordModal({
 
     } catch (err) {
       console.error('Microphone error:', err);
-      setErrorMsg('Không thể truy cập Microphone. Vui lòng cấp quyền hoặc kiểm tra thiết bị kết nối.');
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        setErrorMsg('Bạn đã chặn hoặc chưa cấp quyền Microphone. Hãy bấm vào biểu tượng ổ khóa / cài đặt trang web trên thanh địa chỉ URL của trình duyệt để chọn "Cho phép (Allow)" Microphone.');
+      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+        setErrorMsg('Không tìm thấy thiết bị Microphone kết nối với máy tính.');
+      } else {
+        setErrorMsg('Không thể truy cập Microphone: ' + (err.message || 'Vui lòng cấp quyền hoặc kiểm tra thiết bị kết nối.'));
+      }
     }
   };
 

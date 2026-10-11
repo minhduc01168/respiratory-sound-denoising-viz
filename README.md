@@ -181,30 +181,43 @@ Dựa trên báo cáo chi tiết tại [`docs/PERFORMANCE_REPORT.md`](docs/PERFO
 
 ## 4. Hướng Dẫn Cài Đặt & Khởi Động
 
-### Cách 1: Khởi động 1-Chạm (Khuyến nghị cho Bác sĩ & Giám khảo)
+### Cấu hình Cổng Mạng (.env)
+Hệ thống sử dụng file `.env` (hoặc biến môi trường hệ thống) để cấu hình cổng truy cập (mặc định mở cổng **3000** để phục vụ cả chạy nội bộ lẫn triển khai Server):
+```env
+PORT=3000          # Cổng truy cập Web UI và Nginx Reverse Proxy
+BACKEND_PORT=8000  # Cổng Backend FastAPI
+HOST=0.0.0.0       # Cho phép lắng nghe từ cả localhost và địa chỉ IP Public của Server
+```
+
+---
+
+### Cách 1: Khởi động 1-Chạm (Khuyến nghị cho Local Dev & Server Test)
 
 #### Trên Windows:
 Nhấp đúp chuột vào file **`start.bat`** tại thư mục gốc của dự án.  
 Hệ thống sẽ tự động:
 1. Kiểm tra môi trường Python 3.9+ và Node.js 18+.
-2. Khởi chạy FastAPI Backend tại `http://127.0.0.1:8000`.
-3. Khởi chạy React Vite Frontend tại `http://localhost:5173`.
+2. Khởi chạy FastAPI Backend tại `http://0.0.0.0:8000`.
+3. Khởi chạy React Vite Frontend tại `http://localhost:3000`.
 4. Tự động mở trình duyệt web mặc định hiển thị Dashboard Bác sĩ.
 
-#### Trên Linux / macOS:
+#### Trên Linux / macOS / Cloud Server:
 Cấp quyền thực thi và chạy script bash:
 ```bash
 chmod +x start.sh
 ./start.sh
 ```
+*Gợi ý khi chạy trên Remote Server:*
+- Mở cổng 3000 trên Firewall (Security Group / UFW): `sudo ufw allow 3000/tcp`
+- Truy cập từ trình duyệt máy tính của bạn: `http://<SERVER_IP>:3000`
 
 ---
 
-### Cách 2: Triển khai Đóng gói Container với Docker Compose
+### Cách 2: Triển khai Đóng gói Container với Docker Compose (Khuyên dùng trên Server)
 
 Yêu cầu máy chủ đã cài đặt [Docker](https://www.docker.com/) & Docker Compose:
 ```bash
-# Xây dựng và khởi chạy cả 2 cụm container ở chế độ nền
+# Xây dựng và khởi chạy cả 2 cụm container ở chế độ nền (mặc định Port 3000)
 docker compose up -d --build
 
 # Kiểm tra trạng thái các container
@@ -213,8 +226,16 @@ docker compose ps
 # Xem log thời gian thực
 docker compose logs -f
 ```
-- **Giao diện Dashboard Bác sĩ:** `http://localhost:5173`
-- **Tài liệu API Swagger:** `http://localhost:8000/docs`
+- **Giao diện Dashboard Bác sĩ:** `http://<SERVER_IP_HOAC_LOCALHOST>:3000`
+- **Tài liệu API Swagger:** `http://<SERVER_IP_HOAC_LOCALHOST>:3000/docs`
+- **Healthcheck:** `http://<SERVER_IP_HOAC_LOCALHOST>:3000/health`
+
+> **Lưu ý về Xung đột Port trên Server:**  
+> Nếu cổng 3000 trên server của bạn đang có ứng dụng khác sử dụng (ví dụ: container khác), bạn có thể dễ dàng đổi cổng chỉ định bằng cách:
+> ```bash
+> PORT=3001 docker compose up -d --build
+> ```
+> Hoặc chỉnh sửa trực tiếp `PORT=3001` trong file `.env`.
 
 Để dừng dịch vụ:
 ```bash
@@ -223,7 +244,53 @@ docker compose down
 
 ---
 
-### Cách 3: Chạy Thủ Công Từng Thành Phần (Dành cho Developer)
+### Cách 3: Mở Link HTTPS Public Tự Động Để Test Microphone (Cloudflare Tunnel)
+
+Trình duyệt web hiện đại (Chrome, Edge, Safari) **bắt buộc kết nối HTTPS bảo mật** mới cho phép mở quyền Microphone từ xa. Bạn có thể tạo đường link HTTPS công khai trong 3 giây chỉ bằng 1 lệnh Docker:
+
+#### 1. Khởi chạy Tunnel ở chế độ chạy ngầm (Khuyên dùng):
+```bash
+# Khởi chạy container tunnel kết nối tới port 3000
+docker run -d --name rsdv-tunnel --net=host cloudflare/cloudflared:latest tunnel --url http://localhost:3000
+
+# Lấy đường link HTTPS công khai được sinh ra:
+docker logs rsdv-tunnel 2>&1 | grep -o 'https://.*\.trycloudflare\.com'
+```
+
+#### 2. Dừng Tunnel khi thử nghiệm xong:
+```bash
+docker rm -f rsdv-tunnel
+```
+
+> **Ưu điểm vượt trội:**
+> - Có ngay địa chỉ HTTPS bảo mật có chứng chỉ SSL hợp lệ.
+> - Có thể mở trên máy tính, điện thoại iPhone, Android bất kỳ để test tính năng thu âm Micro y tế với 1 cú click chuột cho phép quyền.
+
+---
+
+### 🎙️ Hướng Dẫn Cấp Quyền & Thử Nghiệm Microphone Khi Deploy Server
+
+Nếu bạn gặp thông báo *"Không thể truy cập Microphone. Vui lòng cấp quyền hoặc kiểm tra thiết bị kết nối"* khi truy cập qua địa chỉ IP Server (`http://<SERVER_IP>:3000`), có 4 cách xử lý dễ dàng:
+
+1. **Cách A (Nhanh nhất - Dùng HTTPS Cloudflare Tunnel ở Cách 3 trên):**  
+   Mở link `https://xxxx.trycloudflare.com` ➔ Trình duyệt hiện popup hỏi quyền ➔ Bấm **Cho phép (Allow)**.
+2. **Cách B (Dùng SSH Port Forwarding về máy cá nhân):**  
+   Trên terminal máy tính của bạn, gõ:
+   ```bash
+   ssh -L 3000:localhost:3000 user@<SERVER_IP>
+   ```
+   Sau đó mở trình duyệt máy tính vào `http://localhost:3000` (được xem là kết nối an toàn, cấp quyền mic tức thì).
+3. **Cách C (Mở cờ trên Chrome / Edge khi truy cập IP HTTP):**  
+   - Gõ vào thanh địa chỉ: `chrome://flags/#unsafely-treat-insecure-origin-as-secure`
+   - Chọn **Enabled**, điền địa chỉ: `http://<SERVER_IP>:3000`
+   - Bấm nút **Relaunch** khởi động lại trình duyệt.
+4. **Cách D (Thử nghiệm không cần Microphone vật lý):**  
+   - **4 Ca bệnh mẫu lâm sàng:** Chọn trực tiếp các ca bệnh phế nang, hen phế quản (Wheeze), viêm phổi (Crackle), ho co thắt có sẵn trên giao diện.
+   - **Nút "Tải tệp âm thanh":** Tải lên các file âm thanh bệnh lý thực tế trong thư mục `testset_audio/` của dự án (`.wav`, `.mp3`).
+
+---
+
+### Cách 4: Chạy Thủ Công Từng Thành Phần (Dành cho Developer)
 
 #### 1. Khởi động Backend (Python FastAPI)
 ```bash

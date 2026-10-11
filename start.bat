@@ -43,16 +43,16 @@ echo.
 echo ==============================================================================
 echo   STARTING SYSTEM SERVICES...
 echo   - Backend API:  http://127.0.0.1:8000 (FastAPI + DSP Engine)
-echo   - Frontend App: http://localhost:5173 (React Vite Dashboard)
+echo   - Frontend App: http://localhost:3000 (React Vite Dashboard)
 echo ==============================================================================
 echo.
 
 :: 4. Khoi dong Backend FastAPI trong cua so doc lap
 echo [*] Launching FastAPI Backend on http://127.0.0.1:8000 ...
-start "RSDV Backend" cmd /k "title RSDV Backend && color 0A && python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload"
+start "RSDV Backend" cmd /k "title RSDV Backend && color 0A && python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload"
 
 :: 5. Khoi dong Frontend Vite trong cua so doc lap
-echo [*] Launching React Vite Frontend on http://localhost:5173 ...
+echo [*] Launching React Vite Frontend on http://localhost:3000 ...
 start "RSDV Frontend" cmd /k "title RSDV Frontend && color 0E && cd frontend && npm run dev"
 
 :: 6. Cho doi server khoi dong va tu dong mo trinh duyet
@@ -60,13 +60,13 @@ echo [*] Waiting for services to initialize...
 timeout /t 4 /nobreak >nul
 
 echo [*] Opening Doctor Dashboard in default browser...
-start http://localhost:5173
+start http://localhost:3000
 
 echo.
 echo ==============================================================================
 echo   SYSTEM IS READY!
-echo   - Web URL: http://localhost:5173
-echo   - API Docs: http://127.0.0.1:8000/docs
+echo   - Web URL: http://localhost:3000
+echo   - API Docs: http://localhost:3000/docs
 echo   - Shortcuts: Space (Play/Pause), Tab (Instant A/B Audio Switch)
 echo   - To stop the system, simply close both opened command windows.
 echo ==============================================================================
