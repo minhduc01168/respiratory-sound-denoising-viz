@@ -1,3 +1,34 @@
-Crackles_pneumoniaO.ogg.mp3 : Tiếng Ran Nổ Viêm Phổi (Pneumonia Crackles - có tạp âm ống nghe)
-Wheeze2O.ogg.mp3 : Tiếng Ran Rít Hen Suyễn nguyên bản (Raw Wheeze - có nhiễu nền)
-Stridor_2OGG.ogg : Tiếng Rít Thanh Quản (Stridor Sound)
+================================================================================
+BỘ DỮ LIỆU ÂM HỌC HÔ HẤP LÂM SÀNG MẪU (CLINICAL TESTSET & PRESET REPOSITORY)
+Dự án: Respiratory Sound Denoising & Visualization Platform
+================================================================================
+
+I. CÁC CA BỆNH MẪU SẴN TRÊN HỆ THỐNG (PRESETS):
+1. Âm Thở Phế Nang Sinh Lý (preset_normal)
+   - Bệnh học: Tiếng thở bình thường (Inhalation & Exhalation)
+   - Link nghe & xác minh trực tiếp: https://commons.wikimedia.org/wiki/File:Breathing_man.ogg
+   - Nguồn: Wikimedia Commons (Public Domain)
+
+2. Hen Phế Quản Co Thắt (preset_wheeze)
+   - Bệnh học: Tiếng ran rít bệnh học (Wheezing)
+   - Link nghe & xác minh trực tiếp: https://commons.wikimedia.org/wiki/File:Wheeze2O.ogg
+   - Nguồn: Wikimedia Commons Medical Archive (Dr. James Heilman, MD)
+
+3. Viêm Phổi Thùy Cấp Tính (preset_crackle)
+   - Bệnh học: Tiếng ran nổ bóc tách phế nang (Crackles)
+   - Link nghe & xác minh trực tiếp: https://commons.wikimedia.org/wiki/File:Crackles_pneumoniaO.ogg
+   - Nguồn: Wikimedia Commons Medical Archive (Dr. James Heilman, MD)
+
+4. Cơn Ho Co Thắt Nhiễm Khuẩn (preset_cough)
+   - Bệnh học: Cơn ho lâm sàng đường hô hấp
+   - Link nghe & xác minh trực tiếp: https://commons.wikimedia.org/wiki/File:Cough_1.ogg
+   - Nguồn: Wikimedia Commons (Public Domain)
+
+II. CÁC BẢN GHI ÂM TESTSET LÂM SÀNG TẢI LÊN (TESTSET FOLDER):
+1. Crackles_pneumoniaO.ogg.mp3 : Tiếng ran nổ viêm phổi
+   - Link trực tiếp: https://commons.wikimedia.org/wiki/File:Crackles_pneumoniaO.ogg
+2. Wheeze2O.ogg.mp3 : Tiếng ran rít hen suyễn
+   - Link trực tiếp: https://commons.wikimedia.org/wiki/File:Wheeze2O.ogg
+3. Stridor_2OGG.ogg : Tiếng rít thanh quản croup trẻ em
+   - Link trực tiếp: https://commons.wikimedia.org/wiki/File:Stridor_2OGG.ogg
+================================================================================

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zap, Activity, Mic, AlertCircle, CheckCircle, Volume2 } from 'lucide-react';
+import { Zap, Activity, Mic, AlertCircle, CheckCircle, Volume2, ExternalLink, BookOpen } from 'lucide-react';
 
 export default function MetricsCard({ metrics, caseInfo }) {
   const snrDelta = metrics?.snr_delta ?? 8.5;
@@ -17,6 +17,64 @@ export default function MetricsCard({ metrics, caseInfo }) {
   const hsai = metrics?.hsai_db;
 
   const tag = caseInfo?.tag || 'Normal';
+
+  // Determine standard clinical reference source ONLY for sample disease test cases
+  const getReferenceSource = () => {
+    // If user uploaded a file or recorded live audio, do not display citation source
+    if (tag === 'Upload' || tag === 'Vocal' || tag === 'Breath') {
+      return null;
+    }
+
+    const id = (caseInfo?.id || '').toLowerCase();
+    const isSamplePreset = Boolean(
+      caseInfo?.source_url || id.startsWith('preset_')
+    );
+
+    if (!isSamplePreset) {
+      return null;
+    }
+
+    if (caseInfo?.source_name && caseInfo?.source_url) {
+      return {
+        name: caseInfo.source_name,
+        url: caseInfo.source_url,
+        citation: caseInfo.citation || '',
+      };
+    }
+
+    if (id.includes('crackle')) {
+      return {
+        name: 'Wikimedia Commons (File:Crackles_pneumoniaO.ogg)',
+        url: 'https://commons.wikimedia.org/wiki/File:Crackles_pneumoniaO.ogg',
+        citation: 'Bản ghi âm tiếng ran nổ viêm phổi thực tế được giám định bởi Dr. James Heilman, MD (CC BY-SA)',
+      };
+    }
+    if (id.includes('wheeze')) {
+      return {
+        name: 'Wikimedia Commons (File:Wheeze2O.ogg)',
+        url: 'https://commons.wikimedia.org/wiki/File:Wheeze2O.ogg',
+        citation: 'Bản ghi âm tiếng ran rít bệnh học lâm sàng được giám định bởi Dr. James Heilman, MD (CC BY-SA)',
+      };
+    }
+    if (id.includes('cough')) {
+      return {
+        name: 'Wikimedia Commons (File:Cough_1.ogg)',
+        url: 'https://commons.wikimedia.org/wiki/File:Cough_1.ogg',
+        citation: 'Bản ghi âm cơn ho thực tế mở trên Wikimedia Commons (Public Domain)',
+      };
+    }
+    if (id.includes('normal')) {
+      return {
+        name: 'Wikimedia Commons (File:Breathing_man.ogg)',
+        url: 'https://commons.wikimedia.org/wiki/File:Breathing_man.ogg',
+        citation: 'Bản ghi âm tiếng thở sinh lý hít vào - thở ra mở trên Wikimedia Commons (Public Domain)',
+      };
+    }
+
+    return null;
+  };
+
+  const refSource = getReferenceSource();
 
   return (
     <div
@@ -335,6 +393,57 @@ export default function MetricsCard({ metrics, caseInfo }) {
             {tag === 'Normal' && 'Âm phế nang êm dịu, không phát hiện tạp âm bệnh lý'}
             {tag === 'Cough' && 'Phát hiện pha nén khí thanh môn kèm tiếng nổ áp lực'}
           </div>
+
+          {/* Reference Source Citation (Only for sample presets) */}
+          {refSource && (
+            <div
+              style={{
+                marginTop: '0.65rem',
+                paddingTop: '0.55rem',
+                borderTop: '1px dashed var(--border-subtle)',
+                display: 'flex',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '0.4rem',
+                fontSize: '0.72rem',
+                lineHeight: 1.35,
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--text-secondary)' }}>
+                <BookOpen size={13} color="var(--primary)" style={{ flexShrink: 0 }} />
+                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Nguồn tham khảo:</span>
+              </div>
+              <a
+                href={refSource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={refSource.citation || refSource.name}
+                style={{
+                  color: 'var(--primary)',
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  fontWeight: 600,
+                  background: 'var(--primary-light)',
+                  padding: '0.15rem 0.5rem',
+                  borderRadius: 'var(--radius-sm)',
+                  transition: 'all 0.15s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.textDecoration = 'underline';
+                  e.currentTarget.style.background = '#BAE6FD';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.textDecoration = 'none';
+                  e.currentTarget.style.background = 'var(--primary-light)';
+                }}
+              >
+                <span>{refSource.name}</span>
+                <ExternalLink size={11} style={{ flexShrink: 0 }} />
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>

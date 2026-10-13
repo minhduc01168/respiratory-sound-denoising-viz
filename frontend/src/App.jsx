@@ -7,6 +7,7 @@ import AnnotationPanel from './components/AnnotationPanel';
 import AudioRecordModal from './components/AudioRecordModal';
 import AudioUploadModal from './components/AudioUploadModal';
 import ReportModal from './components/ReportModal';
+import WebsiteIntroBanner from './components/WebsiteIntroBanner';
 
 export default function App() {
   const [presets, setPresets] = useState([]);
@@ -103,6 +104,12 @@ export default function App() {
           width: '100%',
         }}
       >
+        {/* Concise Clinical Platform Introduction Banner */}
+        <WebsiteIntroBanner
+          onOpenUpload={() => setIsUploadModalOpen(true)}
+          onOpenRecord={() => setIsRecordModalOpen(true)}
+        />
+
         {/* Diagnostic Metrics Summary */}
         <MetricsCard metrics={metrics} caseInfo={activeCase} />
 

@@ -288,6 +288,9 @@ async def get_clinical_presets():
             "estimated_snr_gain": "+6.5 dB",
             "raw_stream_url": "/api/audio/stream/preset_normal/raw",
             "cleaned_stream_url": "/api/audio/stream/preset_normal/cleaned",
+            "source_name": "Wikimedia Commons (File:Breathing_man.ogg)",
+            "source_url": "https://commons.wikimedia.org/wiki/File:Breathing_man.ogg",
+            "citation": "Bản ghi âm tiếng thở sinh lý hít vào - thở ra mở trên Wikimedia Commons (Public Domain)",
         },
         {
             "id": "preset_wheeze",
@@ -299,6 +302,9 @@ async def get_clinical_presets():
             "estimated_snr_gain": "+9.8 dB",
             "raw_stream_url": "/api/audio/stream/preset_wheeze/raw",
             "cleaned_stream_url": "/api/audio/stream/preset_wheeze/cleaned",
+            "source_name": "Wikimedia Commons (File:Wheeze2O.ogg)",
+            "source_url": "https://commons.wikimedia.org/wiki/File:Wheeze2O.ogg",
+            "citation": "Bản ghi âm tiếng ran rít bệnh học lâm sàng được giám định bởi Dr. James Heilman, MD (CC BY-SA)",
         },
         {
             "id": "preset_crackle",
@@ -310,6 +316,9 @@ async def get_clinical_presets():
             "estimated_snr_gain": "+8.4 dB",
             "raw_stream_url": "/api/audio/stream/preset_crackle/raw",
             "cleaned_stream_url": "/api/audio/stream/preset_crackle/cleaned",
+            "source_name": "Wikimedia Commons (File:Crackles_pneumoniaO.ogg)",
+            "source_url": "https://commons.wikimedia.org/wiki/File:Crackles_pneumoniaO.ogg",
+            "citation": "Bản ghi âm tiếng ran nổ viêm phổi thực tế được giám định bởi Dr. James Heilman, MD (CC BY-SA)",
         },
         {
             "id": "preset_cough",
@@ -321,6 +330,9 @@ async def get_clinical_presets():
             "estimated_snr_gain": "+11.2 dB",
             "raw_stream_url": "/api/audio/stream/preset_cough/raw",
             "cleaned_stream_url": "/api/audio/stream/preset_cough/cleaned",
+            "source_name": "Wikimedia Commons (File:Cough_1.ogg)",
+            "source_url": "https://commons.wikimedia.org/wiki/File:Cough_1.ogg",
+            "citation": "Bản ghi âm cơn ho thực tế mở trên Wikimedia Commons (Public Domain)",
         },
     ]
 
