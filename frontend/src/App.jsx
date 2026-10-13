@@ -36,7 +36,7 @@ export default function App() {
     setActiveCase(preset);
     setSelectedRegion(null);
     const algo = getOptimalAlgorithm(profile);
-    fetch(`/api/audio/process/${preset.id}?profile=${profile}&algorithm=${algo}`, { method: 'POST' })
+    fetch(`/api/audio/process/${preset.id}?profile=${profile}&algorithm=${algo}&trim_silence=false`, { method: 'POST' })
       .then((res) => res.json())
       .then((result) => {
         setMetrics(result.metrics);
@@ -116,8 +116,9 @@ export default function App() {
         {/* Dual Waveform A-B Player */}
         {activeCase && (
           <DualWaveformPlayer
-            rawUrl={`/api/audio/stream/${activeCase.id}/raw`}
-            cleanedUrl={`/api/audio/stream/${activeCase.id}/cleaned`}
+            key={`${activeCase.id}-${activeProfile}`}
+            rawUrl={`/api/audio/stream/${activeCase.id}/raw?v=${metrics?.original_duration_sec || '1'}`}
+            cleanedUrl={`/api/audio/stream/${activeCase.id}/cleaned?v=${metrics?.cleaned_duration_sec || '1'}`}
             activeAudioType={activeAudioType}
             setActiveAudioType={setActiveAudioType}
             onTimeUpdate={(t) => setCurrentTime(t)}

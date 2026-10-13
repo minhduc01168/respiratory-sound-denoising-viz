@@ -3,7 +3,7 @@ import urllib.request
 from pathlib import Path
 import numpy as np
 from backend.app.core.config import settings
-from backend.app.engine.audio_io import load_and_resample_audio, save_wav
+from backend.app.engine.audio_io import load_and_resample_audio, normalize_audio, save_wav
 
 # Mapping of clinical presets to authentic open-source recordings
 PRESET_SOURCES = {
@@ -53,9 +53,15 @@ def generate_clinical_presets(presets_dir: Path = settings.PRESETS_DIR):
     for preset_filename, meta in PRESET_SOURCES.items():
         dest_path = presets_dir / preset_filename
 
-        # If already exists and is NOT the old 128044-byte dummy file, skip
+        # If already exists, verify that peak amplitude is healthy (> 0.2)
         if dest_path.exists() and dest_path.stat().st_size != 128044:
-            continue
+            try:
+                import soundfile as sf
+                cur_data, _ = sf.read(str(dest_path))
+                if np.max(np.abs(cur_data)) >= 0.2:
+                    continue
+            except Exception:
+                pass
 
         # Try to load from authentic local audio candidates
         loaded = False
@@ -63,6 +69,7 @@ def generate_clinical_presets(presets_dir: Path = settings.PRESETS_DIR):
             if cand.exists():
                 try:
                     audio_data, _ = load_and_resample_audio(str(cand), target_sr=sr)
+                    audio_data = normalize_audio(audio_data, target_peak=0.95)
                     save_wav(str(dest_path), audio_data, sr=sr)
                     loaded = True
                     break
@@ -79,6 +86,7 @@ def generate_clinical_presets(presets_dir: Path = settings.PRESETS_DIR):
                 with urllib.request.urlopen(req, timeout=10) as response:
                     raw_bytes = response.read()
                     audio_data, _ = load_and_resample_audio(raw_bytes, target_sr=sr)
+                    audio_data = normalize_audio(audio_data, target_peak=0.95)
                     save_wav(str(dest_path), audio_data, sr=sr)
                     loaded = True
             except Exception as e:

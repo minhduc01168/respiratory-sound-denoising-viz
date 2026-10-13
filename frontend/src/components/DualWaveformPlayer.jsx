@@ -329,7 +329,7 @@ export default function DualWaveformPlayer({
               style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', border: 'none' }}
               onClick={() => handleSwitchAudio('raw')}
             >
-              🔴 Kênh A: Âm Gốc (Có Nhiễu)
+              🔴 Kênh A: Âm Gốc
             </button>
             <button
               type="button"
@@ -338,7 +338,7 @@ export default function DualWaveformPlayer({
               onClick={() => handleSwitchAudio('cleaned')}
             >
               <Sparkles size={13} />
-              🟢 Kênh B: Đã Lọc Sạch (AI)
+              🟢 Kênh B: Đã Khử Nhiễu
             </button>
           </div>
         </div>
@@ -386,7 +386,7 @@ export default function DualWaveformPlayer({
                   background: activeAudioType === 'raw' ? '#E11D48' : '#94A3B8',
                 }}
               />
-              <span>KÊNH A: ÂM THANH GỐC (CHỨA TIẾNG ỒN MÔI TRƯỜNG & 50Hz HUM)</span>
+              <span>KÊNH A: ÂM THANH GỐC</span>
             </div>
             {activeAudioType === 'raw' ? (
               <span className="badge badge-rose" style={{ fontSize: '0.7rem', padding: '0.2rem 0.55rem' }}>
@@ -441,7 +441,7 @@ export default function DualWaveformPlayer({
                   background: activeAudioType === 'cleaned' ? '#0D9488' : '#94A3B8',
                 }}
               />
-              <span>KÊNH B: ĐÃ KHỬ NHIỄU (BẢO TOÀN TRỌN VẸN TIẾNG RAN LÂM SÀNG)</span>
+              <span>KÊNH B: ĐÃ KHỬ NHIỄU</span>
             </div>
             {activeAudioType === 'cleaned' ? (
               <span className="badge badge-teal" style={{ fontSize: '0.7rem', padding: '0.2rem 0.55rem' }}>
@@ -529,8 +529,8 @@ export default function DualWaveformPlayer({
             }}
           >
             {activeAudioType === 'cleaned'
-              ? 'Tai nghe: Đang nghe Kênh B (Đã làm sạch)'
-              : 'Tai nghe: Đang nghe Kênh A (Âm gốc có tạp âm)'}
+              ? 'Tai nghe: Đang nghe Kênh B (Đã khử nhiễu)'
+              : 'Tai nghe: Đang nghe Kênh A (Âm gốc)'}
           </span>
         </div>
       </div>

@@ -265,6 +265,11 @@ async def stream_audio(audio_id: str, type: str):
         str(file_path),
         media_type="audio/wav",
         filename=f"{audio_id}_{type}.wav",
+        headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0",
+        },
     )
 
 
