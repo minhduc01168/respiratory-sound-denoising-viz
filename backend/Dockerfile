@@ -19,8 +19,9 @@ WORKDIR /app
 COPY backend/requirements.txt /app/backend/requirements.txt
 RUN pip install --no-cache-dir -r /app/backend/requirements.txt
 
-# Copy backend codebase
+# Copy backend codebase and clinical testset audio
 COPY backend/ /app/backend/
+COPY testset_audio/ /app/testset_audio/
 
 # Expose backend service port
 EXPOSE 8000
