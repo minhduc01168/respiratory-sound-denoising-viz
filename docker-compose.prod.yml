@@ -1,0 +1,48 @@
+# ==============================================================================
+# Production Docker Compose for Respiratory Sound Denoising & Viz (RSDV)
+# Sử dụng trực tiếp Image đã load, không cần build từ source code
+# ==============================================================================
+services:
+  backend:
+    image: respiratory-sound-denoising-viz-backend:latest
+    container_name: rsdv-backend
+    restart: unless-stopped
+    # Không cần mở port ra ngoài internet, frontend gọi backend qua docker network nội bộ
+    expose:
+      - "8000"
+    ports:
+      - "127.0.0.1:${RSDV_BACKEND_PORT:-8008}:8000"
+    volumes:
+      - rsdv-data:/app/backend/storage
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - rsdv-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  frontend:
+    image: respiratory-sound-denoising-viz-frontend:latest
+    container_name: rsdv-frontend
+    restart: unless-stopped
+    # Chỉ mở port trên 127.0.0.1 (localhost) để Reverse Proxy (Nginx) của server tiếp nhận
+    # Tránh đụng độ port 80/443 của website đang chạy
+    ports:
+      - "127.0.0.1:${RSDV_FRONTEND_PORT:-3008}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - rsdv-network
+
+volumes:
+  rsdv-data:
+    driver: local
+
+networks:
+  rsdv-network:
+    driver: bridge

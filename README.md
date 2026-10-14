@@ -242,7 +242,11 @@ docker compose logs -f
 docker compose down
 ```
 
+> 📖 **Hướng Dẫn Triển Khai Production Độc Lập / Đa Website:**  
+> Hướng dẫn đóng gói offline Docker images, cấu hình Nginx Reverse Proxy và cấp SSL Certbot cho tên miền riêng (`spectra.laptrinhai.org`) trên server đang chạy website khác: Xem chi tiết tại [docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md).
+
 ---
+
 
 ### Cách 3: Mở Link HTTPS Public Tự Động Để Test Microphone (Cloudflare Tunnel)
 

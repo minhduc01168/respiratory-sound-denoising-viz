@@ -36,3 +36,9 @@ dist-ssr/
 Thumbs.db
 .vscode/
 .idea/
+
+# Deployment packages & archives
+deploy_package/
+*.tar
+*.tar.gz
+
